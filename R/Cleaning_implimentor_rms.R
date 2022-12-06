@@ -34,3 +34,12 @@ df_raw_data <- readxl::read_excel(path = data_path, col_types = c_types) %>%
   mutate(across(.cols = -c(contains(cols_to_escape)), 
                 .fns = ~ifelse(str_detect(string = ., 
                                           pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
+
+# loops
+# S1 loop
+hh_roster <- readxl::read_excel(path = data_path, sheet = "S1") %>% 
+  mutate(HH02 = openssl::md5(HH02)) 
+
+df_raw_data_hh_roster <- df_raw_data %>% 
+  select(-`_index`) %>% 
+  inner_join(hh_roster, by = c("_uuid" = "_submission__uuid") )
