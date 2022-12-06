@@ -19,3 +19,18 @@ df_cleaning_log <- read_csv("inputs/combined_checks_RMS.csv", col_types = cols(s
          relevant = NA) %>%
   select(uuid, type, name, value, issue_id, sheet, index, relevant, issue)
 
+
+# handle data -------------------------------------------------------------
+
+data_path <- "inputs/RMS_Uganda_2022_Data.xlsx"
+
+# main data
+cols_to_escape <- c("index", "start", "end", "today", "starttime",	"endtime", "_submission_time", "_submission__submission_time")
+
+data_nms <- names(readxl::read_excel(path = data_path, n_max = 2000))
+c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$"), "text", "guess")
+
+df_raw_data <- readxl::read_excel(path = data_path, col_types = c_types) %>% 
+  mutate(across(.cols = -c(contains(cols_to_escape)), 
+                .fns = ~ifelse(str_detect(string = ., 
+                                          pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
