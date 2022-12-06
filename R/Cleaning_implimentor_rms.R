@@ -76,3 +76,15 @@ df_cleaned_data_hh_roster <- implement_cleaning_support(input_df_raw_data = df_r
   select(any_of(other_repeat_col), any_of(colnames(hh_roster)), `_index` = index, `_submission__uuid` = uuid) |> 
   mutate(across(.cols = -c(any_of(cols_to_escape), matches("_age$|^age_|uuid")),
                 .fns = ~ifelse(str_detect(string = ., pattern = "^[9]{2,9}$"), "NA", .)))
+
+
+# write final modified data -----------------------------------------------
+
+list_of_clean_datasets <- list("RMS Uganda 2022 UNHCR" = df_cleaned_data,
+                               "hh_roster" = df_cleaned_data_hh_roster
+)
+
+openxlsx::write.xlsx(x = list_of_clean_datasets,
+                     file = paste0("outputs/", butteR::date_file_prefix(), 
+                                   "_clean_data_unhcr_rms.xlsx"), 
+                     overwrite = TRUE, keepNA = TRUE, na.string = "NA")
