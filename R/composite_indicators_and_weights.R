@@ -5,6 +5,9 @@ create_composite_indicators_pa <- function(input_df) {
   input_df %>% 
     mutate(
       i.settlement = ifelse(settlement == "any_adjumani_settlements", "adjumani", settlement),
+      i.region = case_when(i.settlement %in% c("kampala") ~ "central",
+                           i.settlement %in% c("isingiro", "kamwenge", "kikuube", "kyegegwa") ~ "south_west",
+                           TRUE ~ "west_nile"),
       i.respondent_age = case_when(respondent_age < 18 ~ "age_12_17",
                                    respondent_age <= 59 ~ "age_18_59",
                                    respondent_age > 59 ~ "age_greater_59",
