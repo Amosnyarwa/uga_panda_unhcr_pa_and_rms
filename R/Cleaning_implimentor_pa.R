@@ -87,7 +87,16 @@ df_main_with_composites <- create_composite_indicators_pa(input_df = df_cleaned)
   mutate(strata = case_when(status == "refugee" ~ paste0(i.settlement, "_refugee"),
                             status == "host" ~ paste0(i.region,"_host"),
                             TRUE ~ status
-  ))
+  )) |> 
+  filter(status == "refugee")
+
+# create weights
+
+# refugee weights
+ref_weight_table <- make_refugee_weight_table(input_df_ref = df_main_with_composites, 
+                                              input_refugee_pop = df_ref_pop)
+df_ref_with_weights <- df_main_with_composites %>% 
+  left_join(ref_weight_table, by = "strata")
 
 # write final modified data -----------------------------------------------
 
