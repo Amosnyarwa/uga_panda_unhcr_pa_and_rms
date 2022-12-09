@@ -101,10 +101,13 @@ ref_weight_table <- make_refugee_weight_table(input_df_ref = df_main_with_compos
 df_ref_with_weights <- df_main_with_composites %>% 
   left_join(ref_weight_table, by = "strata")
 
+df_cleaned_data_hh_roster_with_weights <- df_cleaned_data_hh_roster |> 
+  left_join(df_ref_with_weights |> select(uuid, strata, weights), by = "uuid")
+
 # write final modified data -----------------------------------------------
 
-list_of_clean_datasets <- list("UGA2207_PA" = df_cleaned_data,
-                               "hh_roster" = df_cleaned_data_hh_roster
+list_of_clean_datasets <- list("UGA2207_PA" = df_ref_with_weights,
+                               "hh_roster" = df_cleaned_data_hh_roster_with_weights
 )
 
 openxlsx::write.xlsx(x = list_of_clean_datasets,
