@@ -50,6 +50,9 @@ df_raw_data_hh_roster <- df_raw_data |>
 df_survey <- readxl::read_excel("inputs/participatory_assessment_tool.xlsx", sheet = "survey")
 df_choices <- readxl::read_excel("inputs/participatory_assessment_tool.xlsx", sheet = "choices")
 
+# refugee population data
+df_ref_pop <- read_csv("inputs/refugee_population_pa.csv")
+
 # main dataset ------------------------------------------------------------
 
 df_cleaning_log_main <-  df_cleaning_log |> 
