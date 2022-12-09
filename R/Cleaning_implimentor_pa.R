@@ -4,6 +4,7 @@ library(lubridate)
 library(glue)
 
 source("R/support_functions.R")
+source("R/composite_indicators_and_weights.R")
 
 # Read data and checking log
 
@@ -77,6 +78,16 @@ df_cleaned_data_hh_roster <- implement_cleaning_support(input_df_raw_data = df_r
   mutate(across(.cols = -c(any_of(cols_to_escape), matches("_age$|^age_|uuid")),
                 .fns = ~ifelse(str_detect(string = ., pattern = "^[9]{2,9}$"), "NA", .)))
 
+
+
+
+# add composite indicators ------------------------------------------------
+
+df_main_with_composites <- create_composite_indicators_pa(input_df = df_cleaned) %>% 
+  mutate(strata = case_when(status == "refugee" ~ paste0(i.settlement, "_refugee"),
+                            status == "host" ~ paste0(i.region,"_host"),
+                            TRUE ~ status
+  ))
 
 # write final modified data -----------------------------------------------
 
