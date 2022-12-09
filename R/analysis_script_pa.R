@@ -8,7 +8,7 @@ data_nms <- names(readxl::read_excel(path = data_path, n_max = 2000))
 c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$"), "text", "guess")
 
 df_ref_with_weights <- readxl::read_excel(path = data_path, sheet = "UGA2207_PA", col_types = c_types)
-df_roster_with_weights <- readxl::read_excel(path = data_path, sheet = "hh_roster", col_types = c_types)
+df_roster_with_weights <- readxl::read_excel(path = data_path, sheet = "hh_roster")
 
 # dap
 dap <- read_csv("inputs/r_dap_uga_pa.csv")
