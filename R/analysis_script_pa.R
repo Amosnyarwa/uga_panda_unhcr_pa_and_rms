@@ -11,7 +11,11 @@ df_ref_with_weights <- readxl::read_excel(path = data_path, sheet = "UGA2207_PA"
 df_roster_with_weights <- readxl::read_excel(path = data_path, sheet = "hh_roster")
 
 # tool
-df_survey <- readxl::read_excel("inputs/participatory_assessment_tool.xlsx", sheet = "survey")
+df_survey <- readxl::read_excel("inputs/participatory_assessment_tool.xlsx", sheet = "survey") 
+
+df_tool_data_support <- df_survey |> 
+  select(type, name, label) |> 
+  filter(str_detect(string = type, pattern = "integer|select_one|select_multiple"))
 
 # dap
 dap <- read_csv("inputs/r_dap_uga_pa.csv")
