@@ -15,7 +15,8 @@ df_survey <- readxl::read_excel("inputs/participatory_assessment_tool.xlsx", she
 
 df_tool_data_support <- df_survey |> 
   select(type, name, label) |> 
-  filter(str_detect(string = type, pattern = "integer|select_one|select_multiple"))
+  filter(str_detect(string = type, pattern = "integer|date|select_one|select_multiple")) |> 
+  separate(col = type, into = c("select_type", "list_name"), sep =" ", remove = TRUE, extra = "drop" )
 
 # dap
 dap <- read_csv("inputs/r_dap_uga_pa.csv")
@@ -34,7 +35,14 @@ df_roster_analysis <- analysis_support_after_survey_creation(input_ref_svy = df_
 combined_analysis <- bind_rows(df_main_analysis, df_roster_analysis)
  
 full_analysis_long <- combined_analysis |> 
-  
+  mutate(variable = ifelse(is.na(variable), variable_val, variable),
+         int.variable = ifelse(str_detect(string = variable, pattern = "^i\\."), str_replace(string = variable, pattern = "^i\\.", replacement = ""), variable)) %>% 
+  left_join(df_tool_data_support, by = c("int.variable" = "name")) %>% 
+  relocate(label, .after = variable) %>% 
+  mutate(label = ifelse(is.na(label), variable, label),
+         `mean/pct` = ifelse(select_type %in% c("integer"), `mean/pct`, `mean/pct`*100),
+         `mean/pct` = round(`mean/pct`, digits = 2)) %>%
+  select(`Question`= label, `choices/options` = variable_val, `Results(mean/percentage)` = `mean/pct`, population, subset_1_name, subset_1_val)
 
 full_analysis_long |>
-  write_csv(paste0("outputs/", butteR::date_file_prefix(), "_full_analysis_lf_caregiver.csv"), na="")
+  write_csv(paste0("outputs/", butteR::date_file_prefix(), "_full_analysis_lf_pa.csv"), na="")
