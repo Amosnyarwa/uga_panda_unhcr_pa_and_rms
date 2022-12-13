@@ -6,8 +6,9 @@ library(glue)
 source("R/support_functions.R")
 
 # Read data and checking log
+df_full_cl_log <- read_csv("inputs/combined_checks_RMS.csv", col_types = cols(sheet = "c", index = "i")) 
 
-df_cleaning_log <- read_csv("inputs/combined_checks_RMS.csv", col_types = cols(sheet = "c", index = "i")) |> 
+df_cleaning_log <- df_full_cl_log |> 
   filter(!adjust_log %in% c("delete_log")) |>
   mutate(adjust_log = ifelse(is.na(adjust_log), "apply_suggested_change", adjust_log),
          value = ifelse(is.na(value) & str_detect(string = issue_id, pattern = "logic_c_"), "blank", value),
@@ -97,9 +98,12 @@ df_deletion_log <- df_cleaning_log |>
 
 # write final modified data -----------------------------------------------
 
-list_of_clean_datasets <- list("RMS Uganda 2022 UNHCR" = df_cleaned_data,
-                               "hh_roster" = df_cleaned_data_hh_roster,
-                               "deletion_log" = df_deletion_log
+list_of_clean_datasets <- list("Raw_main" = df_raw_data,
+                               "Raw_roster" = hh_roster,
+                               "cleaning_log" = df_full_cl_log,
+                               "deletion_log" = df_deletion_log,
+                               "RMS Uganda 2022 UNHCR" = df_cleaned_data,
+                               "hh_roster" = df_cleaned_data_hh_roster
 )
 
 openxlsx::write.xlsx(x = list_of_clean_datasets,
