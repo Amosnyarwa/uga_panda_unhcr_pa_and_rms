@@ -83,6 +83,14 @@ df_cleaned_data_hh_roster <- implement_cleaning_support(input_df_raw_data = df_r
   #               .fns = ~ifelse(str_detect(string = ., pattern = "^[9]{2,9}$"), "NA", .)))
   filter(`_submission__uuid` %in% df_cleaned_data$uuid)
 
+# deletion log ------------------------------------------------------------
+
+df_deletion_log <- df_cleaning_log |> 
+  filter(type %in% c("remove_survey")) |> 
+  group_by(uuid) |> 
+  filter(row_number() == 1) |> 
+  ungroup()
+
 
 # add composite indicators ------------------------------------------------
 
@@ -106,7 +114,11 @@ df_cleaned_data_hh_roster_with_weights <- df_cleaned_data_hh_roster |>
 
 # write final modified data -----------------------------------------------
 
-list_of_clean_datasets <- list("UGA2207_PA" = df_ref_with_weights,
+list_of_clean_datasets <- list("Raw_main" = df_raw_data,
+                               "Raw_roster" = hh_roster,
+                               "cleaning_log" = df_full_cl_log,
+                               "deletion_log" = df_deletion_log,
+                               "UGA2207_PA" = df_ref_with_weights,
                                "hh_roster" = df_cleaned_data_hh_roster_with_weights
 )
 

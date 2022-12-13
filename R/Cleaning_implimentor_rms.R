@@ -86,7 +86,6 @@ df_cleaned_data_hh_roster <- implement_cleaning_support(input_df_raw_data = df_r
   filter(`_submission__uuid` %in% df_cleaned_data$uuid)
 
 
-
 # deletion log ------------------------------------------------------------
 
 df_deletion_log <- df_cleaning_log |> 
