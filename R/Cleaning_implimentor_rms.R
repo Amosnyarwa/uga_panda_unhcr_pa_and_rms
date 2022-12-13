@@ -79,10 +79,21 @@ df_cleaned_data_hh_roster <- implement_cleaning_support(input_df_raw_data = df_r
   filter(`_submission__uuid` %in% df_cleaned_data$uuid)
 
 
+
+# deletion log ------------------------------------------------------------
+
+df_deletion_log <- df_cleaning_log |> 
+  filter(type %in% c("remove_survey")) |> 
+  group_by(uuid) |> 
+  filter(row_number() == 1) |> 
+  ungroup()
+  
+
 # write final modified data -----------------------------------------------
 
 list_of_clean_datasets <- list("RMS Uganda 2022 UNHCR" = df_cleaned_data,
-                               "hh_roster" = df_cleaned_data_hh_roster
+                               "hh_roster" = df_cleaned_data_hh_roster,
+                               "deletion_log" = df_deletion_log
 )
 
 openxlsx::write.xlsx(x = list_of_clean_datasets,
