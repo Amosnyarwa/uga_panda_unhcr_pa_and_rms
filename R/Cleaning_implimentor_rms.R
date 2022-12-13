@@ -26,7 +26,7 @@ df_cleaning_log <- df_full_cl_log |>
 data_path <- "inputs/RMS_Uganda_2022_Data.xlsx"
 
 # main data
-cols_to_escape <- c("index", "start", "end", "today", "starttime",	"endtime", "_submission_time", "_submission__submission_time")
+cols_to_escape <- c("index", "start", "end", "today", "starttime",	"endtime", "_submission_time", "_submission__submission_time", "REF12a", "REF12b")
 
 data_nms <- names(readxl::read_excel(path = data_path, n_max = 2000))
 c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$|REF12a|REF12b"), "text", "guess")
