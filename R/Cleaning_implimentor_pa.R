@@ -7,8 +7,9 @@ source("R/support_functions.R")
 source("R/composite_indicators_and_weights.R")
 
 # Read data and checking log
+df_full_cl_log <- read_csv("inputs/combined_checks_PA.csv", col_types = cols(sheet = "c", index = "i")) 
 
-df_cleaning_log <- read_csv("inputs/combined_checks_PA.csv", col_types = cols(sheet = "c", index = "i")) |> 
+df_cleaning_log <- df_full_cl_log |> 
   filter(!adjust_log %in% c("delete_log")) |>
   mutate(adjust_log = ifelse(is.na(adjust_log), "apply_suggested_change", adjust_log),
          value = ifelse(is.na(value) & str_detect(string = issue_id, pattern = "logic_c_"), "blank", value),
@@ -61,9 +62,9 @@ df_cleaning_log_main <-  df_cleaning_log |>
 df_cleaned_data <- implement_cleaning_support(input_df_raw_data = df_raw_data,
                                               input_df_survey = df_survey,
                                               input_df_choices = df_choices,
-                                              input_df_cleaning_log = df_cleaning_log_main) |> 
-  mutate(across(.cols = -c(any_of(cols_to_escape), matches("_age$|^age_|uuid")),
-                .fns = ~ifelse(str_detect(string = ., pattern = "^[9]{2,9}$"), "NA", .)))
+                                              input_df_cleaning_log = df_cleaning_log_main) #|> 
+  # mutate(across(.cols = -c(any_of(cols_to_escape), matches("_age$|^age_|uuid")),
+  #               .fns = ~ifelse(str_detect(string = ., pattern = "^[9]{2,9}$"), "NA", .)))
 
 # clean repeats -----------------------------------------------------------
 
@@ -78,10 +79,9 @@ df_cleaned_data_hh_roster <- implement_cleaning_support(input_df_raw_data = df_r
                                                         input_df_choices = df_choices,
                                                         input_df_cleaning_log = df_cleaning_log_roster) |> 
   select(any_of(other_repeat_col), any_of(colnames(hh_roster)), `_index` = index, `_submission__uuid` = uuid) |> 
-  mutate(across(.cols = -c(any_of(cols_to_escape), matches("_age$|^age_|uuid")),
-                .fns = ~ifelse(str_detect(string = ., pattern = "^[9]{2,9}$"), "NA", .)))
-
-
+  # mutate(across(.cols = -c(any_of(cols_to_escape), matches("_age$|^age_|uuid")),
+  #               .fns = ~ifelse(str_detect(string = ., pattern = "^[9]{2,9}$"), "NA", .)))
+  filter(`_submission__uuid` %in% df_cleaned_data$uuid)
 
 
 # add composite indicators ------------------------------------------------
