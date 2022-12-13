@@ -29,7 +29,7 @@ data_path <- "inputs/RMS_Uganda_2022_Data.xlsx"
 cols_to_escape <- c("index", "start", "end", "today", "starttime",	"endtime", "_submission_time", "_submission__submission_time")
 
 data_nms <- names(readxl::read_excel(path = data_path, n_max = 2000))
-c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$"), "text", "guess")
+c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$|REF12a|REF12b"), "text", "guess")
 
 df_raw_data <- readxl::read_excel(path = data_path, col_types = c_types) |> 
   mutate(number = "NA",
