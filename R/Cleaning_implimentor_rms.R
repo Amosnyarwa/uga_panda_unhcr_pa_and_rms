@@ -32,7 +32,10 @@ data_nms <- names(readxl::read_excel(path = data_path, n_max = 2000))
 c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$"), "text", "guess")
 
 df_raw_data <- readxl::read_excel(path = data_path, col_types = c_types) |> 
-  mutate(number = "NA") |> 
+  mutate(number = "NA",
+         number_confirm = "NA",
+         mm_name = "NA",
+         name_individual = "NA") |> 
   mutate(across(.cols = -c(contains(cols_to_escape)), 
                 .fns = ~ifelse(str_detect(string = ., 
                                           pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .))) |> 
@@ -41,12 +44,14 @@ df_raw_data <- readxl::read_excel(path = data_path, col_types = c_types) |>
          EVD_recm_no_centre = ifelse(str_detect(string = EVD_recm_no_centre, pattern = "minitry_of_health"), str_replace(string = EVD_recm_no_centre, pattern = "minitry_of_health", replacement = "ministry_of_health"), EVD_recm_no_centre),
          `EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres` = ifelse(!is.na(`EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres_`) & is.na(`EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres`), `EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres_`, `EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres`)
          ) %>% 
-  select(-c(`EVD_misinformation_who/minitry_of_health`, `EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres_`))
+  select(-c(`EVD_misinformation_who/minitry_of_health`, `EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres_`)) |> 
+  mutate(across(.cols =c("namechild2less", "women_name_b":"fam_name20"), .fns = ~na_if(., .)))
 
 # loops
 # S1 loop
 hh_roster <- readxl::read_excel(path = data_path, sheet = "S1") |> 
-  mutate(HH02 = openssl::md5(HH02)) 
+  mutate(HH02 = openssl::md5(HH02)) |> 
+  mutate(across(.cols =c("women_b":"adult"), .fns = ~na_if(., .)))
 
 df_raw_data_hh_roster <- df_raw_data |> 
   select(-`_index`) |> 
