@@ -34,7 +34,13 @@ df_raw_data <- readxl::read_excel(path = data_path, col_types = c_types) |>
   mutate(number = "NA") |> 
   mutate(across(.cols = -c(contains(cols_to_escape)), 
                 .fns = ~ifelse(str_detect(string = ., 
-                                          pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
+                                          pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .))) |> 
+  mutate(EVD_misinformation_who = ifelse(str_detect(string = EVD_misinformation_who, pattern = "minitry_of_health"), str_replace(string = EVD_misinformation_who, pattern = "minitry_of_health", replacement = "ministry_of_health"), EVD_misinformation_who),
+         `EVD_misinformation_who/ministry_of_health` = ifelse(!is.na(`EVD_misinformation_who/minitry_of_health`) & is.na(`EVD_misinformation_who/ministry_of_health`), `EVD_misinformation_who/minitry_of_health`, `EVD_misinformation_who/ministry_of_health`),
+         EVD_recm_no_centre = ifelse(str_detect(string = EVD_recm_no_centre, pattern = "minitry_of_health"), str_replace(string = EVD_recm_no_centre, pattern = "minitry_of_health", replacement = "ministry_of_health"), EVD_recm_no_centre),
+         `EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres` = ifelse(!is.na(`EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres_`) & is.na(`EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres`), `EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres_`, `EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres`)
+         ) %>% 
+  select(-c(`EVD_misinformation_who/minitry_of_health`, `EVD_recm_no_centre/there_is_an_increased_chance_of_getting_ebola_at_the_ebola_treatment_centres_`))
 
 # loops
 # S1 loop
