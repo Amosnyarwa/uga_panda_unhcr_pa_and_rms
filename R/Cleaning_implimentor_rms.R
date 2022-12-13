@@ -75,7 +75,8 @@ df_cleaned_data_hh_roster <- implement_cleaning_support(input_df_raw_data = df_r
                                                         input_df_cleaning_log = df_cleaning_log_roster) |> 
   select(any_of(other_repeat_col), any_of(colnames(hh_roster)), `_index` = index, `_submission__uuid` = uuid) |> 
   mutate(across(.cols = -c(any_of(cols_to_escape), matches("_age$|^age_|uuid")),
-                .fns = ~ifelse(str_detect(string = ., pattern = "^[9]{2,9}$"), "NA", .)))
+                .fns = ~ifelse(str_detect(string = ., pattern = "^[9]{2,9}$"), "NA", .))) |> 
+  filter(`_submission__uuid` %in% df_cleaned_data$uuid)
 
 
 # write final modified data -----------------------------------------------
