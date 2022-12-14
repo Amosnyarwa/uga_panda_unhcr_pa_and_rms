@@ -33,7 +33,9 @@ data_nms <- names(readxl::read_excel(path = data_path, n_max = 2000))
 c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$"), "text", "guess")
 
 df_raw_data <- readxl::read_excel(path = data_path, sheet = "UGA2207_PA", col_types = c_types) |> 
-  mutate(number = "NA") |> 
+  mutate(number = "NA",
+         number_confirm = "NA",
+         mm_name = "NA") |>  
   mutate(across(.cols = -c(contains(cols_to_escape)), 
                 .fns = ~ifelse(str_detect(string = ., 
                                           pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
