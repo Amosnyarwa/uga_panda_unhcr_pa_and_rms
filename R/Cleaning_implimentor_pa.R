@@ -112,7 +112,7 @@ df_ref_with_weights <- df_main_with_composites %>%
   left_join(ref_weight_table, by = "strata")
 
 df_cleaned_data_hh_roster_with_weights <- df_cleaned_data_hh_roster |> 
-  left_join(df_ref_with_weights |> select(uuid, strata, weights), by = "uuid")
+  left_join(df_ref_with_weights |> select(uuid, strata, weights), by = c("_submission__uuid" = "uuid"))
 
 # write final modified data -----------------------------------------------
 
