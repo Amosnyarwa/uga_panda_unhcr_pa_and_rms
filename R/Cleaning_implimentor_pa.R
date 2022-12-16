@@ -4,7 +4,7 @@ library(lubridate)
 library(glue)
 
 source("R/support_functions.R")
-source("R/composite_indicators_and_weights.R")
+source("R/composite_indicators.R")
 
 # Read data and checking log
 df_full_cl_log <- read_csv("inputs/combined_checks_PA.csv", col_types = cols(sheet = "c", index = "i")) 
