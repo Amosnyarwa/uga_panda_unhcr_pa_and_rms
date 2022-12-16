@@ -21,14 +21,12 @@ create_composite_indicators_pa <- function(input_df) {
                                          respondent_education %in% c("dk") ~ "dk",
                                     TRUE ~ respondent_education
                                     ),
-      int.date_arrival_interval = interval(as_date(date_arrival), today),
-      int.length_since_date_arrival = time_length(int.date_arrival_interval, "year"),
-      i.date_arrival = case_when(int.length_since_date_arrival <= 02.5 ~ "last_3_months",
-                                 int.length_since_date_arrival <= 0.5 ~ "3_and_6_month_ago",
-                                 int.length_since_date_arrival <= 1 ~ "6_month_1_yr_ago",
-                                 int.length_since_date_arrival <= 5 ~ "1_and_5_yrs_ago",
-                                 int.length_since_date_arrival <= 10 ~ "5_and_10_yrs_ago",
-                                 int.length_since_date_arrival > 10 ~ "greater_10_yrs_ago",
+      int.year_arrival_interval = interval(as_date(paste0(year_arrival, "0101")), today),
+      int.length_since_year_arrival = time_length(int.year_arrival_interval, "year"),
+      i.year_arrival = case_when(int.length_since_year_arrival <= 1 ~ "within_1_yr_ago",
+                                 int.length_since_year_arrival <= 5 ~ "1_and_5_yrs_ago",
+                                 int.length_since_year_arrival <= 10 ~ "5_and_10_yrs_ago",
+                                 int.length_since_year_arrival > 10 ~ "greater_10_yrs_ago",
                                  TRUE ~ "NA"
                                  )
     ) |> 
