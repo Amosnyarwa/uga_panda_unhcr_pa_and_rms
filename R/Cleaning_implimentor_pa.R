@@ -32,10 +32,18 @@ cols_to_escape <- c("index", "start", "end", "today", "starttime",	"endtime", "_
 data_nms <- names(readxl::read_excel(path = data_path, n_max = 2000))
 c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$"), "text", "guess")
 
+# handling Personally Identifiable Information(PII)
+vars_to_remove_from_data <- c("deviceid", "audit",
+                              "audit_URL", "instance_name",
+                              "complainant_name", "complainant_id",
+                              "respondent_telephone", "name_pers_recording",
+                              "geopoint",
+                              "_geopoint_latitude", "_geopoint_longitude",
+                              "_geopoint_altitude", "_geopoint_precision",
+                              "number", "number_confirm", "mm_name")
+
 df_raw_data <- readxl::read_excel(path = data_path, sheet = "UGA2207_PA", col_types = c_types) |> 
-  mutate(number = "NA",
-         number_confirm = "NA",
-         mm_name = "NA") |>  
+  mutate(across(any_of(vars_to_remove_from_data), .fns = ~na_if(., .))) |>  
   mutate(across(.cols = -c(contains(cols_to_escape)), 
                 .fns = ~ifelse(str_detect(string = ., 
                                           pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
