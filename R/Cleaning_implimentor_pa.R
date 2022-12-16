@@ -43,7 +43,7 @@ vars_to_remove_from_data <- c("deviceid", "audit",
                               "number", "number_confirm", "mm_name")
 
 df_raw_data <- readxl::read_excel(path = data_path, sheet = "UGA2207_PA", col_types = c_types) |> 
-  mutate(across(any_of(vars_to_remove_from_data), .fns = ~na_if(., .))) |>  
+  mutate(across(.cols = any_of(vars_to_remove_from_data), .fns = ~na_if(., .))) |>  
   mutate(across(.cols = -c(contains(cols_to_escape)), 
                 .fns = ~ifelse(str_detect(string = ., 
                                           pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
