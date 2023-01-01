@@ -46,7 +46,13 @@ df_raw_data <- readxl::read_excel(path = data_path, sheet = "UGA2207_PA", col_ty
   mutate(across(.cols = any_of(vars_to_remove_from_data), .fns = ~na_if(., .))) |>  
   mutate(across(.cols = -c(contains(cols_to_escape)), 
                 .fns = ~ifelse(str_detect(string = ., 
-                                          pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
+                                          pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .))) |> 
+  mutate(-c(`water_access_challenges_faced/lack_of_support_from_unhcr_and_partners`,
+            `water_access_challenges_faced/lack_of_material_to_build_or_repair_the_shelter_structure`,
+            `water_access_challenges_faced/materials_are_too_expensive`,
+            `water_access_challenges_faced/members_of_the_household_have_a_disability`,
+            `water_access_challenges_faced/bad_weather_often_damages_our_shelter_structures`,
+            `water_access_challenges_faced/land_available_is_too_small`))
 
 # loops
 # hh_roster
