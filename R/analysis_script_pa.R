@@ -4,7 +4,7 @@ library(srvyr)
 # clean data with weights
 data_path <- "inputs/clean_data_unhcr_pa.xlsx"
 
-data_nms <- names(readxl::read_excel(path = data_path, n_max = 2000))
+data_nms <- names(readxl::read_excel(path = data_path, n_max = 2000, sheet = "UGA2207_PA"))
 c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$"), "text", "guess")
 
 df_main_clean_data <- readxl::read_excel(path = data_path, sheet = "UGA2207_PA", col_types = c_types)
@@ -19,7 +19,8 @@ df_tool_data_support <- df_survey |>
   separate(col = type, into = c("select_type", "list_name"), sep =" ", remove = TRUE, extra = "drop" )
 
 # dap
-dap <- read_csv("inputs/r_dap_uga_pa.csv")
+dap <- read_csv("inputs/r_dap_uga_pa.csv") |> 
+  filter(!str_detect(string = subset_1, pattern = " |household_type|gender"))
 
 # set up design objects
 ref_svy <- as_survey(.data = df_main_clean_data)
