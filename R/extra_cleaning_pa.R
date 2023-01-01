@@ -154,3 +154,35 @@ df_c_hhid_not_in_sample <- check_hhid_number_not_in_samples(input_tool_data = df
                                                             input_sample_hhid_nos_list = sample_hhid_nos)
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_hhid_not_in_sample")
+
+
+# HoH details in the household composition --------------------------------
+
+# Respondent is not HoH & did not include HoH details in the household composition i.e. hoh_yn == "no" & relationship_to_hoh != hh_head in the hh roster
+
+df_hoh_details_and_hh_roster_6 <- df_raw_data_hh_roster %>%
+  filter(hoh_yn == "no")  %>%
+  group_by(`_uuid`) %>%
+  mutate(int.hoh_bio = ifelse(relation_to_hoh_hhmembers %in% c("hh_head"), "given", "not")) %>% 
+  filter(!str_detect(string = paste(int.hoh_bio, collapse = ":"), pattern = "given")) %>% 
+  filter(row_number() == 1) %>% 
+  ungroup() %>% 
+  mutate(i.check.type = "change_response",
+         i.check.name = "relation_to_hoh_hhmembers ",
+         i.check.current_value = relation_to_hoh_hhmembers,
+         i.check.value = "",
+         i.check.issue_id = "logic_c_hoh_details_and_hh_roster_6",
+         i.check.issue = glue("relation_to_hoh_hhmembers : {relation_to_hoh_hhmembers}, hoh not in roster"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "",
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.so_sm_choices = "",
+         i.check.index = `_index`,
+         i.check.sheet = "hh_roster") %>%
+  dplyr::select(starts_with("i.check.")) %>%
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_hoh_details_and_hh_roster_6")
