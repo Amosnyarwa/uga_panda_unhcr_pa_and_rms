@@ -4,7 +4,7 @@
 create_composite_indicators_pa <- function(input_df) {
   input_df %>% 
     mutate(
-      i.settlement = ifelse(settlement == "any_adjumani_settlements", "adjumani", settlement),
+      i.settlement = ifelse(settlement_confirm == "any_adjumani_settlements", "adjumani", settlement_confirm),
       i.region = case_when(i.settlement %in% c("bidibidi","imvepi","kiryandongo","lobule","palabek",
                                                "palorinya","rhino_camp","adjumani") & status =="refugee" ~ "west_nile",
                            i.settlement %in% c("kyaka_ii","kyangwali","nakivale","oruchinga","rwamwanja") & status =="refugee" ~ "south_west",
