@@ -33,7 +33,8 @@ df_roster_analysis <- analysis_support_after_survey_creation(input_ref_svy = df_
 
 # merge analysis ----------------------------------------------------------
 
-combined_analysis <- bind_rows(df_main_analysis, df_roster_analysis)
+# combined_analysis <- bind_rows(df_main_analysis, df_roster_analysis)
+combined_analysis <- df_main_analysis
  
 full_analysis_long <- combined_analysis |> 
   mutate(variable = ifelse(is.na(variable), variable_val, variable),
@@ -41,9 +42,9 @@ full_analysis_long <- combined_analysis |>
   left_join(df_tool_data_support, by = c("int.variable" = "name")) %>% 
   relocate(label, .after = variable) %>% 
   mutate(label = ifelse(is.na(label), variable, label),
-         `mean/pct` = ifelse(select_type %in% c("integer"), `mean/pct`, `mean/pct`*100),
+         `mean/pct` = ifelse(select_type %in% c("integer") & !str_detect(string = variable, pattern = "^i."), `mean/pct`, `mean/pct`*100),
          `mean/pct` = round(`mean/pct`, digits = 2)) %>%
-  select(`Question`= label, `choices/options` = variable_val, `Results(mean/percentage)` = `mean/pct`, population, subset_1_name, subset_1_val)
+  select(`Question`= label, variable, `choices/options` = variable_val, `Results(mean/percentage)` = `mean/pct`, population, subset_1_name, subset_1_val)
 
 full_analysis_long |>
   write_csv(paste0("outputs/", butteR::date_file_prefix(), "_full_analysis_lf_pa.csv"), na="")
