@@ -95,7 +95,11 @@ df_cleaned_data_hh_roster <- implement_cleaning_support(input_df_raw_data = df_r
   select(any_of(other_repeat_col), any_of(colnames(hh_roster)), `_index` = index, `_submission__uuid` = uuid) |> 
   # mutate(across(.cols = -c(any_of(cols_to_escape), matches("_age$|^age_|uuid")),
   #               .fns = ~ifelse(str_detect(string = ., pattern = "^[9]{2,9}$"), "NA", .)))
-  filter(`_submission__uuid` %in% df_cleaned_data$uuid)
+  filter(`_submission__uuid` %in% df_cleaned_data$uuid) |> 
+  mutate(i.age = case_when(age < 5 ~ "age_0-4",
+                           age < 18 ~ "age_5-17",
+                           age < 60 ~ "age_18-59",
+                           TRUE ~ "age_60+"))
 
 # deletion log ------------------------------------------------------------
 
