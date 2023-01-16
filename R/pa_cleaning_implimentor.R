@@ -157,7 +157,8 @@ df_main_with_composites <- create_composite_indicators_pa(input_df = df_cleaned_
     vulnerability_see %in% c("dk","no_answer") & vulnerability_hear %in% c("dk","no_answer") & vulnerability_walk %in% c("dk","no_answer") & vulnerability_concentrate %in% c("dk","no_answer") & vulnerability_self_care %in% c("dk","no_answer") & vulnerability_communicate %in% c("dk","no_answer") ~ "Unknown" ) ) |> 
   mutate(i.disability = case_when(i.DISABILITY1== "yes_disability" | i.DISABILITY2== "yes_disability" | i.DISABILITY3== "yes_disability" | i.DISABILITY4== "yes_disability" ~ "yes_disability", 
                              i.DISABILITY1== "no_disability" & i.DISABILITY2== "no_disability" & i.DISABILITY3== "no_disability" & i.DISABILITY4== "no_disability" ~ "no_disability", 
-                             TRUE ~ "NA") )
+                             TRUE ~ "NA") ) |> 
+  select(-c(starts_with("int.")))
 
 
 # write final modified data -----------------------------------------------
