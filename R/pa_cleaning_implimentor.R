@@ -113,7 +113,47 @@ df_main_with_composites <- create_composite_indicators_pa(input_df = df_cleaned_
                             status == "host" ~ paste0(i.region,"_host"),
                             TRUE ~ status
   )) |> 
-  filter(status == "refugee")
+  filter(status == "refugee") |> 
+  select(-i.disability) |> 
+  mutate( 
+    # disability identifier variables according to Washington Group standards 
+    int.disaux1_234 = vulnerability_see %in% c("some_difficulty","a_lot_of_difficulty","cannot_do_at_all"), # indicator variables for all 6 domains with value TRUE if SOME DIFFICULTY or A LOT OF DIFFICULTY or CANNOT DO AT ALL 
+    int.disaux2_234 = vulnerability_hear %in% c("some_difficulty","a_lot_of_difficulty","cannot_do_at_all"), 
+    int.disaux3_234 = vulnerability_walk %in% c("some_difficulty","a_lot_of_difficulty","cannot_do_at_all"), 
+    int.disaux4_234 = vulnerability_concentrate %in% c("some_difficulty","a_lot_of_difficulty","cannot_do_at_all"), 
+    int.disaux5_234 = vulnerability_self_care %in% c("some_difficulty","a_lot_of_difficulty","cannot_do_at_all"), 
+    int.disaux6_234 = vulnerability_communicate %in% c("some_difficulty","a_lot_of_difficulty","cannot_do_at_all"), 
+    int.disaux1_34 = vulnerability_see %in% c("a_lot_of_difficulty","cannot_do_at_all"), # indicator variables for all 6 domains with value TRUE if A LOT OF DIFFICULTY or CANNOT DO AT ALL 
+    int.disaux2_34 = vulnerability_hear %in% c("a_lot_of_difficulty","cannot_do_at_all"), 
+    int.disaux3_34 = vulnerability_walk %in% c("a_lot_of_difficulty","cannot_do_at_all"), 
+    int.disaux4_34 = vulnerability_concentrate %in% c("a_lot_of_difficulty","cannot_do_at_all"), 
+    int.disaux5_34 = vulnerability_self_care %in% c("a_lot_of_difficulty","cannot_do_at_all"), 
+    int.disaux6_34 = vulnerability_communicate %in% c("a_lot_of_difficulty","cannot_do_at_all") ) |> 
+  rowwise() |> 
+  mutate( 
+    int.disSum234 = sum(c_across(int.disaux1_234:int.disaux6_234)), # count number of TRUE indicator variables over 6 domains 
+    int.disSum34 = sum(c_across(int.disaux1_34:int.disaux6_34))
+  ) |>
+  ungroup() |> 
+  mutate( i.DISABILITY1 = case_when( # : the level of inclusion is at least one domain/question is coded SOME DIFFICULTY or A LOT OF DIFFICULTY or CANNOT DO AT ALL. 
+    int.disSum234 >= 1 ~ "yes_disability", 
+    int.disSum234 == 0 & (!(vulnerability_see %in% c("dk","no_answer") & vulnerability_hear %in% c("dk","no_answer") & vulnerability_walk %in% c("dk","no_answer") & vulnerability_concentrate %in% c("dk","no_answer") & vulnerability_self_care %in% c("dk","no_answer") & vulnerability_communicate %in% c("dk","no_answer"))) ~ "no_disability", 
+    vulnerability_see %in% c("dk","no_answer") & vulnerability_hear %in% c("dk","no_answer") & vulnerability_walk %in% c("dk","no_answer") & vulnerability_concentrate %in% c("dk","no_answer") & vulnerability_self_care %in% c("dk","no_answer") & vulnerability_communicate %in% c("dk","no_answer") ~ "Unknown" ) ) |> 
+  mutate( i.DISABILITY2 = case_when( # : the level of inclusion is at least two domains/questions are coded SOME DIFFICULTY or A LOT OF DIFFICULTY or CANNOT DO AT ALL or any 1 domain/question is coded A LOT OF DIFFICULTY or CANNOT DO AT ALL 
+    int.disSum234 >= 2 | int.disSum34 >=1 ~ "yes_disability", 
+    int.disSum234 < 2 & int.disSum34 == 0 & (!(vulnerability_see %in% c("dk","no_answer") & vulnerability_hear %in% c("dk","no_answer") & vulnerability_walk %in% c("dk","no_answer") & vulnerability_concentrate %in% c("dk","no_answer") & vulnerability_self_care %in% c("dk","no_answer") & vulnerability_communicate %in% c("dk","no_answer"))) ~ "no_disability", 
+    vulnerability_see %in% c("dk","no_answer") & vulnerability_hear %in% c("dk","no_answer") & vulnerability_walk %in% c("dk","no_answer") & vulnerability_concentrate %in% c("dk","no_answer") & vulnerability_self_care %in% c("dk","no_answer") & vulnerability_communicate %in% c("dk","no_answer") ~ "Unknown" ) ) |> 
+  mutate( i.DISABILITY3 = case_when( # : the level of inclusion is at least one domain/question is coded A LOT OF DIFFICULTY or CANNOT DO AT ALL. 
+    int.disSum34 >= 1 ~ "yes_disability", 
+    int.disSum34 == 0 & (!(vulnerability_see %in% c("dk","no_answer") & vulnerability_hear %in% c("dk","no_answer") & vulnerability_walk %in% c("dk","no_answer") & vulnerability_concentrate %in% c("dk","no_answer") & vulnerability_self_care %in% c("dk","no_answer") & vulnerability_communicate %in% c("dk","no_answer"))) ~ "no_disability", 
+    vulnerability_see %in% c("dk","no_answer") & vulnerability_hear %in% c("dk","no_answer") & vulnerability_walk %in% c("dk","no_answer") & vulnerability_concentrate %in% c("dk","no_answer") & vulnerability_self_care %in% c("dk","no_answer") & vulnerability_communicate %in% c("dk","no_answer") ~ "Unknown" ) ) |> 
+  mutate( i.DISABILITY4 = case_when( # : the level of inclusion is at least one domain/question is coded CANNOT DO AT ALL. 
+    vulnerability_see=="cannot_do_at_all" | vulnerability_hear=="cannot_do_at_all" | vulnerability_walk=="cannot_do_at_all" | vulnerability_concentrate=="cannot_do_at_all" | vulnerability_self_care=="cannot_do_at_all" | vulnerability_communicate=="cannot_do_at_all" ~ "yes_disability", 
+    !(vulnerability_see=="cannot_do_at_all" | vulnerability_hear=="cannot_do_at_all" | vulnerability_walk=="cannot_do_at_all" | vulnerability_concentrate=="cannot_do_at_all" | vulnerability_self_care=="cannot_do_at_all" | vulnerability_communicate=="cannot_do_at_all") & (!(vulnerability_see %in% c("dk","no_answer") & vulnerability_hear %in% c("dk","no_answer") & vulnerability_walk %in% c("dk","no_answer") & vulnerability_concentrate %in% c("dk","no_answer") & vulnerability_self_care %in% c("dk","no_answer") & vulnerability_communicate %in% c("dk","no_answer"))) ~ "no_disability", 
+    vulnerability_see %in% c("dk","no_answer") & vulnerability_hear %in% c("dk","no_answer") & vulnerability_walk %in% c("dk","no_answer") & vulnerability_concentrate %in% c("dk","no_answer") & vulnerability_self_care %in% c("dk","no_answer") & vulnerability_communicate %in% c("dk","no_answer") ~ "Unknown" ) ) |> 
+  mutate(i.disability = case_when(i.DISABILITY1== "yes_disability" | i.DISABILITY2== "yes_disability" | i.DISABILITY3== "yes_disability" | i.DISABILITY4== "yes_disability" ~ "yes_disability", 
+                             i.DISABILITY1== "no_disability" & i.DISABILITY2== "no_disability" & i.DISABILITY3== "no_disability" & i.DISABILITY4== "no_disability" ~ "no_disability", 
+                             TRUE ~ "NA") )
 
 
 # write final modified data -----------------------------------------------
