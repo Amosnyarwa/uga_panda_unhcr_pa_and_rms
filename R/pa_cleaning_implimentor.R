@@ -113,10 +113,10 @@ df_deletion_log <- df_cleaning_log |>
 # add composite indicators ------------------------------------------------
 
 df_main_with_composites <- create_composite_indicators_pa(input_df = df_cleaned_data) %>% 
-  mutate(strata = case_when(status == "refugee" ~ paste0(i.settlement, "_refugee"),
-                            status == "host" ~ paste0(i.region,"_host"),
-                            TRUE ~ status
-  )) |> 
+  # mutate(strata = case_when(status == "refugee" ~ paste0(i.settlement, "_refugee"),
+  #                           status == "host" ~ paste0(i.region,"_host"),
+  #                           TRUE ~ status
+  # )) |> 
   filter(status == "refugee") |> 
   select(-i.disability) |> 
   mutate( 
