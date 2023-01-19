@@ -7,8 +7,8 @@ data_path <- "inputs/clean_data_unhcr_pa.xlsx"
 data_nms <- names(readxl::read_excel(path = data_path, n_max = 2000, sheet = "UGA2207_PA"))
 c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$"), "text", "guess")
 
-df_main_clean_data <- readxl::read_excel(path = data_path, sheet = "UGA2207_PA", col_types = c_types)
-df_roster_clean_data <- readxl::read_excel(path = data_path, sheet = "hh_roster")
+df_main_clean_data <- readxl::read_excel(path = data_path, sheet = "UGA2207_PA", col_types = c_types, na = "NA")
+df_roster_clean_data <- readxl::read_excel(path = data_path, sheet = "hh_roster", na = "NA")
 
 # tool
 df_survey <- readxl::read_excel("inputs/participatory_assessment_tool.xlsx", sheet = "survey") 
