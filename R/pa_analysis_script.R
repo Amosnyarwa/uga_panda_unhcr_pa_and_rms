@@ -30,8 +30,8 @@ ref_svy <- as_survey(.data = df_main_clean_data)
 df_main_analysis <- analysis_support_after_survey_creation(input_ref_svy = ref_svy,
                                                            input_dap = dap |> filter(!variable %in% c("gender", "age", "i.age")))
 
-df_roster_analysis <- analysis_support_after_survey_creation(input_ref_svy = df_roster_clean_data,
-                                                           input_dap = dap |> filter(variable %in% c("gender", "age", "i.age")))
+# df_roster_analysis <- analysis_support_after_survey_creation(input_ref_svy = df_roster_clean_data,
+#                                                            input_dap = dap |> filter(variable %in% c("gender", "age", "i.age")))
 
 # merge analysis ----------------------------------------------------------
 
