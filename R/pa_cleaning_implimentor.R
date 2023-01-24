@@ -27,7 +27,7 @@ df_cleaning_log <- df_full_cl_log |>
 data_path <- "inputs/partipatory_assessment_data.xlsx"
 
 # main data
-cols_to_escape <- c("index", "start", "end", "today", "starttime",	"endtime", "_submission_time", "_submission__submission_time")
+cols_to_escape <- c("index", "start", "end", "today", "start_t", "end_t", "starttime",	"endtime", "_submission_time", "_submission__submission_time")
 
 data_nms <- names(readxl::read_excel(path = data_path, n_max = 2000))
 c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$"), "text", "guess")
@@ -118,7 +118,7 @@ df_main_with_composites <- create_composite_indicators_pa(input_df = df_cleaned_
   #                           TRUE ~ status
   # )) |> 
   filter(status == "refugee") |> 
-  select(-i.disability) |> 
+  # select(-i.disability) |> 
   mutate( 
     # disability identifier variables according to Washington Group standards 
     int.disaux1_234 = vulnerability_see %in% c("some_difficulty","a_lot_of_difficulty","cannot_do_at_all"), # indicator variables for all 6 domains with value TRUE if SOME DIFFICULTY or A LOT OF DIFFICULTY or CANNOT DO AT ALL 
@@ -155,9 +155,9 @@ df_main_with_composites <- create_composite_indicators_pa(input_df = df_cleaned_
     vulnerability_see=="cannot_do_at_all" | vulnerability_hear=="cannot_do_at_all" | vulnerability_walk=="cannot_do_at_all" | vulnerability_concentrate=="cannot_do_at_all" | vulnerability_self_care=="cannot_do_at_all" | vulnerability_communicate=="cannot_do_at_all" ~ "yes_disability", 
     !(vulnerability_see=="cannot_do_at_all" | vulnerability_hear=="cannot_do_at_all" | vulnerability_walk=="cannot_do_at_all" | vulnerability_concentrate=="cannot_do_at_all" | vulnerability_self_care=="cannot_do_at_all" | vulnerability_communicate=="cannot_do_at_all") & (!(vulnerability_see %in% c("dk","no_answer") & vulnerability_hear %in% c("dk","no_answer") & vulnerability_walk %in% c("dk","no_answer") & vulnerability_concentrate %in% c("dk","no_answer") & vulnerability_self_care %in% c("dk","no_answer") & vulnerability_communicate %in% c("dk","no_answer"))) ~ "no_disability", 
     vulnerability_see %in% c("dk","no_answer") & vulnerability_hear %in% c("dk","no_answer") & vulnerability_walk %in% c("dk","no_answer") & vulnerability_concentrate %in% c("dk","no_answer") & vulnerability_self_care %in% c("dk","no_answer") & vulnerability_communicate %in% c("dk","no_answer") ~ "Unknown" ) ) |> 
-  mutate(i.disability = case_when(i.DISABILITY1== "yes_disability" | i.DISABILITY2== "yes_disability" | i.DISABILITY3== "yes_disability" | i.DISABILITY4== "yes_disability" ~ "yes_disability", 
-                             i.DISABILITY1== "no_disability" & i.DISABILITY2== "no_disability" & i.DISABILITY3== "no_disability" & i.DISABILITY4== "no_disability" ~ "no_disability", 
-                             TRUE ~ "NA") ) |> 
+  # mutate(i.disability = case_when(i.DISABILITY1== "yes_disability" | i.DISABILITY2== "yes_disability" | i.DISABILITY3== "yes_disability" | i.DISABILITY4== "yes_disability" ~ "yes_disability", 
+  #                            i.DISABILITY1== "no_disability" & i.DISABILITY2== "no_disability" & i.DISABILITY3== "no_disability" & i.DISABILITY4== "no_disability" ~ "no_disability", 
+  #                            TRUE ~ "NA") ) |> 
   select(-c(starts_with("int.")))
 
 
