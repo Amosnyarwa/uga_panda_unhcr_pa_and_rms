@@ -87,8 +87,9 @@ labelled_chr2dbl <- function(x) {
 # main --------------------------------------------------------------------
 
 df_rms_clean_data_composites <- df_rms_clean_data |> 
-  mutate( # primary citizenship from REF01 and REF02 
-    citizenship = REF02 ) |> 
+  mutate( # primary citizenship from REF01 and REF02     
+    citizenship = REF02 
+  ) |> 
   mutate(citizenship = labelled(citizenship, labels = val_labels(df_rms_clean_data$REF02), label = var_label(df_rms_clean_data$REF02))) |> 
   mutate( 
     # disability identifier variables according to Washington Group standards 
@@ -127,13 +128,20 @@ df_rms_clean_data_composites <- df_rms_clean_data |>
           DISABILITY3 = labelled(DISABILITY3, labels = c( "Without disability" = 0, "With disability" = 1, "Unknown" = 98 ), label = "Washington Group disability identifier 3"), 
           DISABILITY4 = labelled(DISABILITY4, labels = c( "Without disability" = 0, "With disability" = 1, "Unknown" = 98 ), label = "Washington Group disability identifier 4")) |> 
   ###Calculate having at least one disability identifier among 4 categories 
-  mutate(disab= case_when(DISABILITY1==1 | DISABILITY2==1 | DISABILITY3==1 | DISABILITY4==1 ~ 1, DISABILITY1==0 | DISABILITY2==0 | DISABILITY3==0 | DISABILITY4==0 ~ 0, TRUE ~ NA_real_) ) |> 
-  mutate(disab = labelled(disab, labels = c( "Without disability" = 0, "With disability" = 1) ))
+  mutate(disab = case_when(DISABILITY1==1 | DISABILITY2==1 | DISABILITY3==1 | DISABILITY4==1 ~ 1, DISABILITY1==0 | DISABILITY2==0 | DISABILITY3==0 | DISABILITY4==0 ~ 0, TRUE ~ NA_real_) ) |> 
+  mutate(disab = labelled(disab, labels = c( "Without disability" = 0, "With disability" = 1) )) |> 
+  mutate(citizenship_com   = citizenship) # adding this that is mentioned in aggregation
 
 
 # roster ------------------------------------------------------------------
 
 df_rms_roster_up_age <- df_rms_roster |> 
+  mutate(HH07 = ifelse((is.na(HH07)|HH07 %in% c("NA")) & !(is.na(HH07_months)|HH07_months %in% c("NA")), ceiling(as.numeric(HH07_months)/12), HH07)) |> # update HH07 based on HH07_months
   mutate(HH07_cat = cut(as.numeric(HH07), breaks = c(-1, 4, 17, 59, Inf), labels = c("0-4", "5-17", "18-59", "60+"))) |> 
   mutate(HH07_cat2 = cut(as.numeric(HH07), breaks = c(-1, 17, Inf), labels = c("0-17", "18-60+")))
+
+
+
+# Impact Indicators -------------------------------------------------------
+
 
