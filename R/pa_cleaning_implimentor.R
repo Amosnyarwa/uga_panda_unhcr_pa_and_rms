@@ -175,3 +175,7 @@ openxlsx::write.xlsx(x = list_of_clean_datasets,
                      file = paste0("outputs/", butteR::date_file_prefix(), 
                                    "_clean_data_unhcr_pa.xlsx"), 
                      overwrite = TRUE, keepNA = TRUE, na.string = "NA")
+
+openxlsx::write.xlsx(x = list_of_clean_datasets,
+                     file = paste0("inputs/clean_data_unhcr_pa.xlsx"), 
+                     overwrite = TRUE, keepNA = TRUE, na.string = "NA")
