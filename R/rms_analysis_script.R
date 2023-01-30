@@ -289,7 +289,6 @@ full_analysis_long <- combined_analysis |>
   mutate(label = ifelse(is.na(label), variable, label),
          `mean/pct` = ifelse(select_type %in% c("integer") & !str_detect(string = variable, pattern = "^i\\."), `mean/pct`, `mean/pct`*100),
          `mean/pct` = round(`mean/pct`, digits = 2)) %>%
-  # left_join(df_question_type_data, by = c("int.variable" = "kobo_question")) |> 
   select(`Question`= label, variable, `choices/options` = variable_val, `Results(mean/percentage)` = `mean/pct`, n_unweighted, population, subset_1_name, subset_1_val)
 
 write_csv(full_analysis_long, paste0("outputs/", butteR::date_file_prefix(), "_full_analysis_lf_rms.csv"), na="")
