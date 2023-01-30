@@ -323,3 +323,9 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
          
          
   )
+
+
+openxlsx::write.xlsx(x = df_rms_main_composites_extra,
+                     file = paste0("outputs/", butteR::date_file_prefix(), 
+                                   "_clean_data_unhcr_rms_with_composites.xlsx"), 
+                     overwrite = TRUE, keepNA = TRUE, na.string = "NA")
