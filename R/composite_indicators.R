@@ -32,3 +32,17 @@ create_composite_indicators_pa <- function(input_df) {
     ) |> 
     select(-c(starts_with("int.")))
 }
+
+create_composite_indicators_rms <- function(input_df) {
+  input_df %>% 
+    mutate(
+      i.settlement_confirm = ifelse(settlement_confirm == "any_adjumani_settlements", "adjumani", settlement_confirm),
+      i.respondent_age = case_when(respondent_age < 18 ~ "age_12_17",
+                                   respondent_age <= 59 ~ "age_18_59",
+                                   respondent_age > 59 ~ "age_greater_59",
+                                   TRUE ~ "NA"),
+      i.UNI01 = case_when(UNI01 > 0 ~ "Yes",
+                          TRUE ~ "No")
+    ) |> 
+    select(-c(starts_with("int.")))
+}
