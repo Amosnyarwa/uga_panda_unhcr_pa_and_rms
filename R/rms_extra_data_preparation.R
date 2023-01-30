@@ -8,6 +8,8 @@ library(labelled)
 # library(dm) # install.packages("dm")
 # library(janitor)
 
+source("R/composite_indicators.R")
+
 df_rms_clean_data <- readxl::read_excel("outputs/clean_data_unhcr_rms.xlsx", sheet = "RMS Uganda 2022 UNHCR_cleaned", na = "NA")
 df_rms_roster <- readxl::read_excel("outputs/clean_data_unhcr_rms.xlsx", sheet = "hh_roster_cleaned")
 
@@ -86,7 +88,7 @@ labelled_chr2dbl <- function(x) {
 
 # main --------------------------------------------------------------------
 
-df_rms_clean_data_composites <- df_rms_clean_data |> 
+df_rms_clean_data_composites <- create_composite_indicators_rms(df_rms_clean_data) |> 
   mutate( # primary citizenship from REF01 and REF02     
     citizenship = REF02 
   ) |> 
