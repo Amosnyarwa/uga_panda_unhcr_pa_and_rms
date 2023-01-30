@@ -64,7 +64,7 @@ df_rms_clean_data_composites <- create_composite_indicators_rms(df_main_clean_da
   mutate( disSum234 = sum(c_across(disaux1_234:disaux6_234)), # count number of TRUE indicator variables over 6 domains 
           disSum34 = sum(c_across(disaux1_34:disaux6_34)) # count number of TRUE indicator variables over 6 domains 
   ) |>
-  ungroup() |> 
+  dplyr::ungroup() |> 
   mutate( DISABILITY1 = case_when( # : the level of inclusion is at least one domain/question is coded SOME DIFFICULTY or A LOT OF DIFFICULTY or CANNOT DO AT ALL. 
     disSum234 >= 1 ~ 1, 
     disSum234 == 0 & (!(DIS01 %in% c("98","99") & DIS02 %in% c("98","99") & DIS03 %in% c("98","99") & DIS04 %in% c("98","99") & DIS05 %in% c("98","99") & DIS06 %in% c("98","99"))) ~ 0, 
@@ -281,7 +281,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
 
 # roster
 
-df_rms_roster_up_age <- df_rms_roster |> 
+df_rms_roster_up_age <- df_roster_clean_data |> 
   mutate(HH07 = ifelse((is.na(HH07)|HH07 %in% c("NA")) & !(is.na(HH07_months)|HH07_months %in% c("NA")), ceiling(as.numeric(HH07_months)/12), HH07)) |> # update HH07 based on HH07_months
   mutate(HH07_cat = cut(as.numeric(HH07), breaks = c(-1, 4, 17, 59, Inf), labels = c("0-4", "5-17", "18-59", "60+"))) |> 
   mutate(HH07_cat2 = cut(as.numeric(HH07), breaks = c(-1, 17, Inf), labels = c("0-17", "18-60+")))
@@ -294,7 +294,7 @@ df_rms_roster_up_age <- df_rms_roster |>
 ref_svy <- as_survey(.data = df_rms_main_composites_extra)
 
 df_main_analysis <- analysis_support_after_survey_creation(input_ref_svy = ref_svy,
-                                                           input_dap = dap)
+                                                           input_dap = dap |> filter(!variable %in% c("outcome13_3", "HH01")))
 
 
 # merge analysis ----------------------------------------------------------
