@@ -1,6 +1,6 @@
 # ## devtools::install_github("dickoa/robotoolbox") 
 # library(haven) 
-# library(tidyverse) 
+library(tidyverse)
 # library(srvyr) 
 # library(robotoolbox) 
 library(labelled)
@@ -8,7 +8,7 @@ library(labelled)
 # library(dm) # install.packages("dm")
 # library(janitor)
 
-df_rms_clean_data <- readxl::read_excel("outputs/clean_data_unhcr_rms.xlsx", sheet = "RMS Uganda 2022 UNHCR_cleaned")
+df_rms_clean_data <- readxl::read_excel("outputs/clean_data_unhcr_rms.xlsx", sheet = "RMS Uganda 2022 UNHCR_cleaned", na = "NA")
 df_rms_roster <- readxl::read_excel("outputs/clean_data_unhcr_rms.xlsx", sheet = "hh_roster_cleaned")
 
 s1.oldestHHM <- df_rms_roster |> 
@@ -214,9 +214,9 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
          HACC01_num = labelled_chr2dbl(HACC01),
          HACC03_num = labelled_chr2dbl(HACC03),
          health_NOacc=case_when(
-           HACC03_num==1 & (HACC04_7==1 | HACC04_8==1 | HACC04_96==1 ) ~ 0,
-           HACC03_num==1 & (HACC04_1==1 | HACC04_2==1 | HACC04_3==1 |HACC04_4==1 |HACC04_5==1 |
-                              HACC04_6==1 | HACC04_9==1 | HACC04_10==1) ~ 1, TRUE ~ 0),
+           HACC03_num==1 & (`HACC04/7`==1 | `HACC04/8`==1 | `HACC04/96`==1 ) ~ 0,
+           HACC03_num==1 & (`HACC04/1`==1 | `HACC04/2`==1 | `HACC04/3`==1 |`HACC04/4`==1 |`HACC04/5`==1 |
+                              `HACC04/6`==1 | `HACC04/9`==1 | `HACC04/10`==1) ~ 1, TRUE ~ 0),
          HACC_need=HACC01_num + health_NOacc,
          impact2_3=HACC01_num/HACC_need,
          impact2_3=labelled(impact2_3,
@@ -320,39 +320,4 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
          outcome13_3 = unemployed/labour_force,
          
          
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
   )
-  
-  
-# roster
-df_rms_roster_up_age
-
