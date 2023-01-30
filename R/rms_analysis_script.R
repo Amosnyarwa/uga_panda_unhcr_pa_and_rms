@@ -17,7 +17,7 @@ df_roster_clean_data <- readxl::read_excel(path = data_path, sheet = "hh_roster"
 df_survey <- readxl::read_excel("inputs/RMS_tool.xlsx", sheet = "survey") 
 
 df_tool_data_support <- df_survey |> 
-  select(type, name, label) |> 
+  select(type, name, label = `label::English (en)`) |> 
   filter(str_detect(string = type, pattern = "integer|date|select_one|select_multiple")) |> 
   separate(col = type, into = c("select_type", "list_name"), sep =" ", remove = TRUE, extra = "drop" )
 
