@@ -268,15 +268,19 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
                               UNEM04_num==1 ~ 1,
                               UNEM02_num==1 & UNEM07_num==1 & (UNEM08_num==1 | UNEM08_num==2) ~ 1,
                               UNEM05_num==1 & UNEM06_num==3 ~ 1,
-                              UNEM05_num==1 & (UNEM06_num==1 | UNEM06_num==2) & (UNEM08_num==1 | UNEM08_num==2) ~ 1),
-         i.employed = case_when(employed == 1 ~ "Yes",
-                                TRUE ~ "No"),
+                              UNEM05_num==1 & (UNEM06_num==1 | UNEM06_num==2) & (UNEM08_num==1 | UNEM08_num==2) ~ 1,
+                              filter_elderly==1 ~ NA_real_,
+                              TRUE ~ 0),
+         i.employed = case_when(employed == 1 ~ "Yes", employed == 0 ~ "No"),
          unemployed = case_when(employed==0 & UNEM09_num==1 & UNEM10_num==1 ~ 1,
+                                filter_elderly==1 ~ NA_real_,
                                 TRUE ~ 0),
-         i.unemployed = case_when(unemployed == 1 ~ "Yes",
-                                TRUE ~ "No"),
+         i.unemployed = case_when(unemployed == 1 ~ "Yes", unemployed == 0 ~ "No"),
          labour_force = case_when(employed==1 | unemployed==1 ~ 1),
-         outcome13_3 = unemployed/labour_force
+         outcome13_3 = unemployed/labour_force,
+         outcome13_3 = labelled(outcome13_3, labels = c("Yes" = 1, "No" = 0),
+                                label = "Proportion of PoC (working age) who are unemployed"),
+         outcome13_3 = as_factor(outcome13_3)
   )
 
 # roster
@@ -311,7 +315,7 @@ df_combined_main_roster <- df_main_to_combine |>
 ref_svy <- as_survey(.data = df_combined_main_roster)
 
 df_main_analysis <- analysis_support_after_survey_creation(input_ref_svy = ref_svy,
-                                                           input_dap = dap |> filter(!variable %in% c("outcome13_3", "HH01")))
+                                                           input_dap = dap)
 
 
 # merge analysis ----------------------------------------------------------
