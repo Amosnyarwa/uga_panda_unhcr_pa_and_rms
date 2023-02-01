@@ -283,6 +283,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
 
 df_rms_roster_up_age <- df_roster_clean_data |> 
   mutate(HH07 = ifelse((is.na(HH07)|HH07 %in% c("NA")) & !(is.na(HH07_months)|HH07_months %in% c("NA")), ceiling(as.numeric(HH07_months)/12), HH07)) |> # update HH07 based on HH07_months
+  mutate(HH07 = ifelse((is.na(HH07)|HH07 %in% c("NA")) & !(is.na(age)|age %in% c("NA")), age, HH07)) |> # update HH07 based on age column
   mutate(HH07_cat = cut(as.numeric(HH07), breaks = c(-1, 4, 17, 59, Inf), labels = c("0-4", "5-17", "18-59", "60+"))) |> 
   mutate(HH07_cat2 = cut(as.numeric(HH07), breaks = c(-1, 17, Inf), labels = c("0-17", "18-60+")))
 
@@ -290,8 +291,20 @@ df_rms_roster_up_age <- df_roster_clean_data |>
 
 # Analysis ----------------------------------------------------------------
 
+# combine main data and loop
+
+df_main_to_combine <- df_rms_main_composites_extra |> 
+  mutate(uuid_respodent = paste0(uuid, "_", name_respondent))
+
+df_roster_to_combine <- df_rms_roster_up_age |> 
+  mutate(uuid_respodent = paste0(`_submission__uuid`, "_fam_name", personId)) |> 
+  select(uuid_respodent, HH04, HH07_cat)
+
+df_combined_main_roster <- df_main_to_combine |> 
+  left_join(df_roster_to_combine, by = "uuid_respodent")
+
 # set up design objects
-ref_svy <- as_survey(.data = df_rms_main_composites_extra)
+ref_svy <- as_survey(.data = df_combined_main_roster)
 
 df_main_analysis <- analysis_support_after_survey_creation(input_ref_svy = ref_svy,
                                                            input_dap = dap |> filter(!variable %in% c("outcome13_3", "HH01")))
