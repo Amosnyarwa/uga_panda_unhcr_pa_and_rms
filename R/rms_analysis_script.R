@@ -318,7 +318,7 @@ df_main_analysis <- analysis_support_after_survey_creation(input_ref_svy = ref_s
                                                            input_dap = dap)
 
 
-# merge analysis ----------------------------------------------------------
+# prepare analysis output ----------------------------------------------------------
 
 combined_analysis <- df_main_analysis
  
