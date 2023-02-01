@@ -285,8 +285,12 @@ df_rms_roster_up_age <- df_roster_clean_data |>
   mutate(HH07 = ifelse((is.na(HH07)|HH07 %in% c("NA")) & !(is.na(HH07_months)|HH07_months %in% c("NA")), ceiling(as.numeric(HH07_months)/12), HH07)) |> # update HH07 based on HH07_months
   mutate(HH07 = ifelse((is.na(HH07)|HH07 %in% c("NA")) & !(is.na(age)|age %in% c("NA")), age, HH07)) |> # update HH07 based on age column
   mutate(HH07_cat = cut(as.numeric(HH07), breaks = c(-1, 4, 17, 59, Inf), labels = c("0-4", "5-17", "18-59", "60+"))) |> 
-  mutate(HH07_cat2 = cut(as.numeric(HH07), breaks = c(-1, 17, Inf), labels = c("0-17", "18-60+")))
-
+  mutate(HH07_cat2 = cut(as.numeric(HH07), breaks = c(-1, 17, Inf), labels = c("0-17", "18-60+"))) |> 
+  mutate(HH04 = case_when(HH04 == 1 ~ "Female",
+                          HH04 == 2 ~ "Male",
+                          HH04 == 96 ~ "Other",
+                          HH04 == 99 ~ "Prefer not to respond",
+                          TRUE ~ "NA"))
 
 
 # Analysis ----------------------------------------------------------------
