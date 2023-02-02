@@ -280,7 +280,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
          outcome13_3 = unemployed/labour_force,
          outcome13_3 = labelled(outcome13_3, labels = c("Yes" = 1, "No" = 0),
                                 label = "Proportion of PoC (working age) who are unemployed"),
-         outcome13_3 = as_factor(outcome13_3)
+         i.outcome13_3 = to_factor(outcome13_3)
   )
 
 # roster
