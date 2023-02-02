@@ -83,12 +83,12 @@ df_rms_clean_data_composites <- create_composite_indicators_rms(df_main_clean_da
   mutate( DISABILITY1 = labelled(DISABILITY1, labels = c( "Without disability" = 0, "With disability" = 1, "Unknown" = 98 ), label = "Washington Group disability identifier 1"), 
           DISABILITY2 = labelled(DISABILITY2, labels = c( "Without disability" = 0, "With disability" = 1, "Unknown" = 98 ), label = "Washington Group disability identifier 2"), 
           DISABILITY3 = labelled(DISABILITY3, labels = c( "Without disability" = 0, "With disability" = 1, "Unknown" = 98 ), label = "Washington Group disability identifier 3"), 
-          DISABILITY3 = to_factor(DISABILITY3), 
+          i.DISABILITY3 = to_factor(DISABILITY3), 
           DISABILITY4 = labelled(DISABILITY4, labels = c( "Without disability" = 0, "With disability" = 1, "Unknown" = 98 ), label = "Washington Group disability identifier 4")) |> 
   ###Calculate having at least one disability identifier among 4 categories 
   mutate(disab = case_when(DISABILITY1==1 | DISABILITY2==1 | DISABILITY3==1 | DISABILITY4==1 ~ 1, DISABILITY1==0 | DISABILITY2==0 | DISABILITY3==0 | DISABILITY4==0 ~ 0, TRUE ~ NA_real_) ) |> 
   mutate(disab = labelled(disab, labels = c( "Without disability" = 0, "With disability" = 1) ),
-         disab = to_factor(disab)
+         i.disab = to_factor(disab)
          ) |> 
   mutate(citizenship_com   = citizenship) # adding this that is mentioned in aggregation
 
@@ -101,7 +101,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
                                labels = c("Health facility is available" = 1,
                                           "Health facilitiy is not available" = 0),
                                label = "Access to health facilities"),
-         health_acc = to_factor(health_acc),
+         i.health_acc = to_factor(health_acc),
          LIGHT01_num = labelled_chr2dbl(LIGHT01),
          LIGHT02_num = labelled_chr2dbl(LIGHT02),
          LIGHT03_num = labelled_chr2dbl(LIGHT03),
@@ -111,7 +111,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
                                  TRUE ~ 0),
          electricity = labelled(electricity, labels = c("Yes" = 1, "No" = 0),
                                 label = "Access to electricity"),
-         electricity = to_factor(electricity),
+         i.electricity = to_factor(electricity),
          DWA03a_num = labelled_chr2dbl(DWA03a),
          DWA02_num = labelled_chr2dbl(DWA02),
          DWA01_num = labelled_chr2dbl(DWA01),
@@ -125,7 +125,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
          drinkingwater=case_when((dwa_cond1==1 & dwa_cond2==1 & dwa_cond3==1) ~ 1, TRUE ~ 0),
          drinkingwater = labelled(drinkingwater,  labels = c("Yes" = 1, "No" = 0),
                                   label = "Access to drinking water"),
-         drinkingwater = to_factor(drinkingwater),
+         i.drinkingwater = to_factor(drinkingwater),
          DWE01_num = labelled_chr2dbl(DWE01),
          DWE02_num = labelled_chr2dbl(DWE02),
          DWE03_num = labelled_chr2dbl(DWE03),
@@ -153,13 +153,13 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
            dwe01_cat==1 & dwe02_cat==1 & dwe03_cat==1 & dwe04_cat==1 & dwe05_cat==1 & dwe09_cat==1 ~ 1),
          shelter = labelled(shelter, labels = c("Yes" = 1, "No" = 0),
                             label = "Habitable and affordable shelter"),
-         shelter = to_factor(shelter),
+         i.shelter = to_factor(shelter),
          impact2_2=case_when(
            shelter==0 | electricity==0 | drinkingwater==0 | health_acc==0 ~ 0,
            shelter==1 & electricity==1 & drinkingwater==1 & health_acc==1 ~ 1),
          impact2_2 = labelled(impact2_2, labels =c("Yes"=1, "No"=0),
                             label="PoCs residing in physically safe and secure settlements with access to basic facilities"),
-         impact2_2 = to_factor(impact2_2),
+         i.impact2_2 = to_factor(impact2_2),
          HACC01_num = labelled_chr2dbl(HACC01),
          HACC03_num = labelled_chr2dbl(HACC03),
          health_NOacc=case_when(
@@ -172,14 +172,14 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
                             labels =c("Yes"=1, "No"=0),
                             label="PoC has access to health services in the last 30 days when needed"),
          # impact2_3 = ifelse(is.nan(impact2_3), NA, impact2_3),
-         impact2_3 = to_factor(impact2_3),
+         i.impact2_3 = to_factor(impact2_3),
          SAF01_num = labelled_chr2dbl(SAF01),
          impact3_3=case_when(
            SAF01_num==1 | SAF01_num==2 ~ 1,
            SAF01_num==3 | SAF01_num==4 | SAF01_num==98 ~ 0, SAF01_num==99 ~ NA_real_),
          impact3_3=labelled(impact3_3, labels =c( "Yes"=1, "No"=0),
                             label="PoC feeling safe walking alone"),
-         impact3_3 = to_factor(impact3_3),
+         i.impact3_3 = to_factor(impact3_3),
          GBV01a_num = labelled_chr2dbl(GBV01a), # health services
          GBV01b_num = labelled_chr2dbl(GBV01b), # psycho-social services
          GBV01c_num = labelled_chr2dbl(GBV01c), # safety and security services
@@ -190,7 +190,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
                              labels=c("Yes"=1, "No"=0),
                              label="Poc who know where to access available GBV services"
          ),
-         outcome4_1 = to_factor(outcome4_1),
+         i.outcome4_1 = to_factor(outcome4_1),
          DWE01_num = labelled_chr2dbl(DWE01),
          DWE02_num = labelled_chr2dbl(DWE02),
          DWE03_num = labelled_chr2dbl(DWE03),
@@ -218,7 +218,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
            dwe01_cat==1 & dwe02_cat==1 & dwe03_cat==1 & dwe04_cat==1 & dwe05_cat==1 & dwe09_cat==1 ~ 1),
          outcome9_1 = labelled(outcome9_1, labels = c("Yes" = 1, "No" = 0),
                                label = "PoC living in habitable and affordable housing"),
-         outcome9_1 = to_factor(outcome9_1),
+         i.outcome9_1 = to_factor(outcome9_1),
          LIGHT01_num = labelled_chr2dbl(LIGHT01), ############ repeated
          LIGHT02_num = labelled_chr2dbl(LIGHT02), ############ repeated
          LIGHT03_num = labelled_chr2dbl(LIGHT03), ############ repeated
@@ -229,7 +229,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
                      TRUE ~ 0),
          outcome9_2 = labelled(outcome9_2, labels = c("Yes" = 1, "No" = 0),
                                label = "PoC that have energy to ensure lighting"),
-         outcome9_2 = to_factor(outcome9_2),
+         i.outcome9_2 = to_factor(outcome9_2),
          DWA03a_num = labelled_chr2dbl(DWA03a), ############ repeated
          DWA02_num = labelled_chr2dbl(DWA02), ############ repeated
          DWA01_num = labelled_chr2dbl(DWA01), ############ repeated
@@ -245,14 +245,14 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
            (dwa_cond1==1 & dwa_cond2==1 & dwa_cond3==1) ~ 1, TRUE ~ 0),
          outcome12_1 = labelled(outcome12_1, labels = c("Yes" = 1, "No" = 0),
                                 label = "PoC using at least basic drinking water services"),
-         outcome12_1 = to_factor(outcome12_1),
+         i.outcome12_1 = to_factor(outcome12_1),
          INC01_num = labelled_chr2dbl(INC01),
          outcome13_2=case_when(INC01_num==1 ~ 1,
                                INC01_num==2 |INC01_num==3 |INC01_num==98 ~ 0 ),
          outcome13_2 = labelled(outcome13_2, labels = c("Yes" = 1, "No" = 0),
                                 label = "PoC who self-report positive changes in their income compared
                                 to previous year"),
-         outcome13_2 = to_factor(outcome13_2),
+         i.outcome13_2 = to_factor(outcome13_2),
          UNEM01_num = labelled_chr2dbl(UNEM01),
          UNEM02_num = labelled_chr2dbl(UNEM02),
          UNEM03_num = labelled_chr2dbl(UNEM03),
@@ -310,7 +310,9 @@ df_roster_to_combine <- df_rms_roster_up_age |>
 
 df_combined_main_roster <- df_main_to_combine |> 
   left_join(df_roster_to_combine, by = "uuid_respodent")
-
+openxlsx::write.xlsx(df_combined_main_roster, file = paste0("outputs/", butteR::date_file_prefix(), 
+                                                            "_clean_data_with_composites_unhcr_rms.xlsx"), 
+                     overwrite = TRUE, keepNA = TRUE, na.string = "NA")
 # set up design objects
 ref_svy <- as_survey(.data = df_combined_main_roster)
 
