@@ -470,12 +470,12 @@ df_rms_roster_up_age <- df_roster_clean_data |>
   mutate(HH07 = ifelse((is.na(HH07)|HH07 %in% c("NA")) & !(is.na(age)|age %in% c("NA")), age, HH07)) |> # update HH07 based on age column
   mutate(HH07_cat = cut(as.numeric(HH07), breaks = c(-1, 4, 17, 59, Inf), labels = c("age_0-4", "age_5-17", "age_18-59", "age_60+"))) |> 
   mutate(HH07_cat2 = cut(as.numeric(HH07), breaks = c(-1, 17, Inf), labels = c("age_0-17", "age_18-60+"))) |> 
-  mutate(HH04 = case_when(HH04 == 1 ~ "Female",
-                          HH04 == 2 ~ "Male",
-                          HH04 == 96 ~ "Other",
-                          HH04 == 99 ~ "Prefer not to respond",
-                          TRUE ~ "NA")) |> 
-  mutate(i.HH03 = case_when(HH03 == 1 ~ 'Household Head',
+  mutate(i.HH04 = case_when(HH04 == 1 ~ "Female",
+                            HH04 == 2 ~ "Male",
+                            HH04 == 96 ~ "Other",
+                            HH04 == 99 ~ "Prefer not to respond",
+                            TRUE ~ "NA"),
+         i.HH03 = case_when(HH03 == 1 ~ 'Household Head',
                             HH03 == 2 ~ 'Spouse/Partner',
                             HH03 == 3 ~ 'Son/Daughter',
                             HH03 == 4 ~ 'Son-in-law / Daughter-in-law',
@@ -505,7 +505,7 @@ df_main_to_combine <- df_rms_main_composites_extra |>
 
 df_roster_to_combine <- df_rms_roster_up_age |> 
   mutate(uuid_respodent = paste0(`_submission__uuid`, "_fam_name", personId)) |> 
-  select(uuid_respodent, HH04, HH07_cat, i.HH03)
+  select(uuid_respodent, i.HH04, HH07_cat, i.HH03)
 
 df_combined_main_roster <- df_main_to_combine |> 
   left_join(df_roster_to_combine, by = "uuid_respodent")
