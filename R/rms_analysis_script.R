@@ -1,6 +1,7 @@
 library(tidyverse)
 library(srvyr)
 library(labelled)
+library(lubridate)
 
 source("R/composite_indicators.R")
 source("R/support_functions.R")
@@ -169,7 +170,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
          HACC_need=HACC01_num + health_NOacc,
          impact2_3=HACC01_num/HACC_need,
          impact2_3=labelled(impact2_3,
-                            labels =c("Yes"=1, "Yes"=0.5, "No"=0),
+                            labels =c("Yes"=1, "No"=0.5, "No"=0),
                             label="PoC has access to health services in the last 30 days when needed"),
          # impact2_3 = ifelse(is.nan(impact2_3), NA, impact2_3),
          i.impact2_3 = to_factor(impact2_3),
@@ -285,7 +286,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
   mutate(
     ii.HH01 = HH01,
     i.REF02 = REF02,
-    i.REF12 = REF12,
+    # i.REF12 = REF12, # already calculated
     i.DISABILITY1 = to_factor(DISABILITY1),
     i.DISABILITY2 = to_factor(DISABILITY2),
     # i.DISABILITY3 = DISABILITY3, already calculated
@@ -300,7 +301,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
     #                      HACC02 == 99 ~ 'Prefer not to respond',
     #                      HACC02 == 96 ~ 'Other (Specify) |_____|',
     #                      TRUE ~ HACC02),
-    i.HACC02 = HACC02,
+    # i.HACC02 = HACC02,
     i.HACC03 = case_when(HACC03 == 1 ~ "Yes",
                          HACC03 == 0 ~ "No"),
     # i.HACC04 = case_when(HACC04 == 1 ~ 'Lack of money to pay for care', # select multiple
@@ -316,7 +317,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
     #                      HACC04 == 99 ~ 'Prefer not to answer',
     #                      HACC04 == 96 ~ 'Other (Specify)',
     #                      TRUE ~ HACC04),
-    i.HACC04 = HACC04, 
+    # i.HACC04 = HACC04, 
     i.DWE01 = case_when(DWE01 == 1 ~ 'Apartment',
                         DWE01 == 2 ~ 'House',
                         DWE01 == 3 ~ 'Tent',
