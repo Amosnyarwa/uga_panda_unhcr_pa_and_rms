@@ -115,8 +115,8 @@ list_of_clean_datasets <- list("Raw_main" = df_raw_data |> select(-c(starts_with
                                "choices" = df_choices,
                                "cleaning_log" = df_full_cl_log,
                                "deletion_log" = df_deletion_log,
-                               "RMS Uganda 2022 UNHCR" = df_cleaned_data |> select(-c(starts_with("EVD_"))),
-                               "hh_roster" = df_cleaned_data_hh_roster
+                               "RMS Uganda 2022 UNHCR_cleaned" = df_cleaned_data |> select(-c(starts_with("EVD_"))),
+                               "hh_roster_cleaned" = df_cleaned_data_hh_roster
 )
 
 openxlsx::write.xlsx(x = list_of_clean_datasets,
