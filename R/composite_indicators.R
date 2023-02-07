@@ -55,7 +55,9 @@ create_composite_indicators_rms <- function(input_df) {
       i.REF12 = case_when(int.length_since_year_arrival <= 1 ~ "within_1_yr_ago",
                           int.length_since_year_arrival <= 5 ~ "1_and_5_yrs_ago",
                           int.length_since_year_arrival <= 10 ~ "5_and_10_yrs_ago",
-                          int.length_since_year_arrival > 10 ~ "greater_10_yrs_ago")
+                          int.length_since_year_arrival > 10 ~ "greater_10_yrs_ago"),
+      i.DWA03 = case_when(DWA03a == 1 ~ DWA03b,
+                          DWA03a == 2 ~ DWA03b*60)
     ) |> 
     select(-c(starts_with("int.")))
 }
