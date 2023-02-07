@@ -109,6 +109,8 @@ df_deletion_log <- df_cleaning_log |>
 
 list_of_clean_datasets <- list("Raw_main" = df_raw_data,
                                "Raw_roster" = hh_roster,
+                               "survey" = df_survey,
+                               "choices" = df_choices,
                                "cleaning_log" = df_full_cl_log,
                                "deletion_log" = df_deletion_log,
                                "RMS Uganda 2022 UNHCR" = df_cleaned_data,
