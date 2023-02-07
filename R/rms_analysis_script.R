@@ -169,7 +169,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
          HACC_need=HACC01_num + health_NOacc,
          impact2_3=HACC01_num/HACC_need,
          impact2_3=labelled(impact2_3,
-                            labels =c("Yes"=1, "No"=0),
+                            labels =c("Yes"=1, "Yes"=0.5, "No"=0),
                             label="PoC has access to health services in the last 30 days when needed"),
          # impact2_3 = ifelse(is.nan(impact2_3), NA, impact2_3),
          i.impact2_3 = to_factor(impact2_3),
@@ -283,7 +283,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
          i.outcome13_3 = to_factor(outcome13_3)
   ) |> 
   mutate(
-    i.HH01 = HH01,
+    ii.HH01 = HH01,
     i.REF02 = REF02,
     i.REF12 = REF12,
     i.DISABILITY1 = to_factor(DISABILITY1),
@@ -444,7 +444,7 @@ df_rms_main_composites_extra <- df_rms_clean_data_composites |>
                         HEA02 == 5 ~ 'Boda boda',
                         HEA02 == 96 ~ 'Other, specify',
                         TRUE ~ as.character(HEA02)),
-    i.HEA03 = HEA03,
+    ii.HEA03 = HEA03,
     i.GBV01a = case_when(GBV01a == 1 ~ 'Yes',
                          GBV01a == 0 ~ 'No',
                          GBV01a == 98 ~ 'Don\'t know',
