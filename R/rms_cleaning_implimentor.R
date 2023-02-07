@@ -62,8 +62,10 @@ df_raw_data_hh_roster <- df_raw_data |>
   inner_join(hh_roster, by = c("_uuid" = "_submission__uuid") )
 
 # tool
-df_survey <- readxl::read_excel("inputs/RMS_tool.xlsx", sheet = "survey")
-df_choices <- readxl::read_excel("inputs/RMS_tool.xlsx", sheet = "choices")
+df_survey <- readxl::read_excel("inputs/RMS_tool.xlsx", sheet = "survey") |> 
+  filter(row_number() < 268 | row_number() > 303)
+df_choices <- readxl::read_excel("inputs/RMS_tool.xlsx", sheet = "choices") |> 
+  filter(row_number() < 383 | row_number() > 303)
 
 # main dataset ------------------------------------------------------------
 
@@ -107,17 +109,21 @@ df_deletion_log <- df_cleaning_log |>
 
 # write final modified data -----------------------------------------------
 
-list_of_clean_datasets <- list("Raw_main" = df_raw_data,
+list_of_clean_datasets <- list("Raw_main" = df_raw_data |> select(-c(starts_with("EVD_"))),
                                "Raw_roster" = hh_roster,
                                "survey" = df_survey,
                                "choices" = df_choices,
                                "cleaning_log" = df_full_cl_log,
                                "deletion_log" = df_deletion_log,
-                               "RMS Uganda 2022 UNHCR" = df_cleaned_data,
+                               "RMS Uganda 2022 UNHCR" = df_cleaned_data |> select(-c(starts_with("EVD_"))),
                                "hh_roster" = df_cleaned_data_hh_roster
 )
 
 openxlsx::write.xlsx(x = list_of_clean_datasets,
                      file = paste0("outputs/", butteR::date_file_prefix(), 
                                    "_clean_data_unhcr_rms.xlsx"), 
+                     overwrite = TRUE, keepNA = TRUE, na.string = "NA")
+
+openxlsx::write.xlsx(x = list_of_clean_datasets,
+                     file = paste0("inputs/clean_data_unhcr_rms.xlsx"), 
                      overwrite = TRUE, keepNA = TRUE, na.string = "NA")
