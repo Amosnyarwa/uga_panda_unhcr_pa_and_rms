@@ -62,10 +62,8 @@ df_raw_data_hh_roster <- df_raw_data |>
   inner_join(hh_roster, by = c("_uuid" = "_submission__uuid") )
 
 # tool
-df_survey <- readxl::read_excel("inputs/RMS_tool.xlsx", sheet = "survey") |> 
-  filter(row_number() < 268 | row_number() > 303)
-df_choices <- readxl::read_excel("inputs/RMS_tool.xlsx", sheet = "choices") |> 
-  filter(row_number() < 383 | row_number() > 303)
+df_survey <- readxl::read_excel("inputs/RMS_tool.xlsx", sheet = "survey")
+df_choices <- readxl::read_excel("inputs/RMS_tool.xlsx", sheet = "choices")
 
 # main dataset ------------------------------------------------------------
 
@@ -111,8 +109,6 @@ df_deletion_log <- df_cleaning_log |>
 
 list_of_clean_datasets <- list("Raw_main" = df_raw_data |> select(-c(starts_with("EVD_"))),
                                "Raw_roster" = hh_roster,
-                               "survey" = df_survey,
-                               "choices" = df_choices,
                                "cleaning_log" = df_full_cl_log,
                                "deletion_log" = df_deletion_log,
                                "RMS Uganda 2022 UNHCR_cleaned" = df_cleaned_data |> select(-c(starts_with("EVD_"))),
