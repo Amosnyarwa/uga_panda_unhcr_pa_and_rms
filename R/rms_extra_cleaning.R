@@ -39,7 +39,7 @@ df_raw_data <- readxl::read_excel(path = data_path, sheet = "UGA2207_PA", col_ty
                                            TRUE ~ settlement),
          district_name = i.check.district_name,
          i.check.settlement = settlement,
-         # i.check.point_number = household_id,
+         i.check.hhid = household_id,
          start = as_datetime(start),
          end = as_datetime(end)
          )
@@ -126,3 +126,54 @@ df_c_hhid_not_in_sample <- check_hhid_number_not_in_samples(input_tool_data = df
                                                             input_sample_hhid_nos_list = sample_hhid_nos)
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_hhid_not_in_sample")
+
+
+# extra log for found issues during analysis ------------------------------
+
+# Respondent age missmatch with roster
+df_ages_summ <- df_raw_data_hh_roster |> 
+  group_by(`_submission__uuid`) |> 
+  summarise(ii.HH07 = paste(HH07, collapse = " : ")) |> 
+  ungroup()
+ 
+df_raw_data_hh_roster |> 
+  filter(respondent_age != HH07) |> 
+  left_join(df_ages_summ, by = c("uuid" = "_submission__uuid")) |> 
+  mutate(i.check.type = "change_response",
+         i.check.name = "respondent_age",
+         i.check.current_value = respondent_age,
+         i.check.value = HH07,
+         i.check.issue_id = "logic_c_harmonizing_age",
+         i.check.issue = "Respondent age missmatch with roster",
+         i.check.other_text = "",
+         i.check.checked_by = "AT",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = glue("respondent_age:{respondent_age}, name_respondent:{name_respondent}, personId:{personId}, HH ages:{ii.HH07}"), 
+         i.check.reviewed = "1",
+         i.check.adjust_log = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = "")) |> 
+  writexl::write_xlsx("outputs/not_matching_ages_log.xlsx")
+
+
+# correcting units of fetching water time
+
+df_raw_data |> 
+  filter(DWA03a == 2, DWA03b > 4) |> 
+  mutate(i.check.type = "change_response",
+         i.check.name = "DWA03a",
+         i.check.current_value = DWA03a,
+         i.check.value = 1,
+         i.check.issue_id = "logic_c_fetch_water_time",
+         i.check.issue = "correcting units of fetching water time",
+         i.check.other_text = "",
+         i.check.checked_by = "AT",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = glue("DWA03a:{DWA03a}, DWA03b:{DWA03b}"), 
+         i.check.reviewed = "1",
+         i.check.adjust_log = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = "")) |> 
+  writexl::write_xlsx("outputs/not_accurate_water_time_log.xlsx")
