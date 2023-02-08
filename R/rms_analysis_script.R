@@ -509,7 +509,8 @@ df_roster_to_combine <- df_rms_roster_up_age |>
   select(uuid_respodent, i.HH04, HH07_cat, i.HH03)
 
 df_combined_main_roster <- df_main_to_combine |> 
-  left_join(df_roster_to_combine, by = "uuid_respodent")
+  left_join(df_roster_to_combine, by = "uuid_respodent") |> 
+  select(-uuid_respodent)
 
 openxlsx::write.xlsx(df_combined_main_roster, file = paste0("outputs/", butteR::date_file_prefix(), 
                                                             "_clean_data_with_composites_unhcr_rms.xlsx"), 
