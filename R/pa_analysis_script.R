@@ -20,7 +20,7 @@ df_tool_data_support <- df_survey |>
 
 # dap
 dap <- read_csv("inputs/r_dap_uga_pa.csv") |> 
-  filter(!str_detect(string = subset_1, pattern = " |household_type|gender"))
+  filter(!str_detect(string = subset_1, pattern = " |household_type"))
 
 df_question_type_data <- read_csv("inputs/r_question_groups_pa.csv")
 
