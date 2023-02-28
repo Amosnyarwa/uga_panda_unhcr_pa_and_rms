@@ -39,10 +39,10 @@ create_composite_indicators_rms <- function(input_df) {
   input_df %>% 
     mutate(
       i.settlement_confirm = ifelse(settlement_confirm == "any_adjumani_settlements", "adjumani", settlement_confirm),
-      i.region = case_when(i.settlement %in% c("bidibidi","imvepi","kiryandongo","lobule","palabek",
+      i.region = case_when(i.settlement_confirm %in% c("bidibidi","imvepi","kiryandongo","lobule","palabek",
                                                "palorinya","rhino_camp","adjumani") & status =="refugee" ~ "west_nile",
-                           i.settlement %in% c("kyaka_ii","kyangwali","nakivale","oruchinga","rwamwanja") & status =="refugee" ~ "south_west",
-                           TRUE ~ i.settlement),
+                           i.settlement_confirm %in% c("kyaka_ii","kyangwali","nakivale","oruchinga","rwamwanja") & status =="refugee" ~ "south_west",
+                           TRUE ~ i.settlement_confirm),
       i.respondent_age = case_when(respondent_age < 18 ~ "age_12_17",
                                    respondent_age <= 59 ~ "age_18_59",
                                    respondent_age > 59 ~ "age_greater_59",
