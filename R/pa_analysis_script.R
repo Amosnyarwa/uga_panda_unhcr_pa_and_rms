@@ -1,6 +1,8 @@
 library(tidyverse)
 library(srvyr)
 
+source("R/support_functions.R")
+
 # clean data with weights
 data_path <- "inputs/clean_data_unhcr_pa.xlsx"
 
