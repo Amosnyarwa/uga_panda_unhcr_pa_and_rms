@@ -68,8 +68,8 @@ df_c_duplicate_uuid <- check_duplicates_by_uuid(input_tool_data = df_tool_data)
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_duplicate_uuid")
 
 # testing_data
-df_testing_data <- df_raw_data %>% 
-  filter(i.check.start_date < as_date("2022-11-22") | str_detect(string = household_id, pattern = fixed('test', ignore_case = TRUE))) %>% 
+df_testing_data <- df_raw_data |> 
+  filter(i.check.start_date < as_date("2022-11-22") | str_detect(string = household_id, pattern = fixed('test', ignore_case = TRUE))) |> 
   mutate(i.check.type = "remove_survey",
          i.check.name = "",
          i.check.current_value = "",
@@ -82,15 +82,15 @@ df_testing_data <- df_raw_data %>%
          i.check.comment = "", 
          i.check.reviewed = "1",
          i.check.adjust_log = "",
-         i.check.so_sm_choices = "") %>% 
-  dplyr::select(starts_with("i.check")) %>% 
+         i.check.so_sm_choices = "") |> 
+  dplyr::select(starts_with("i.check")) |> 
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_testing_data")
 
 # host data
-df_host_data <- df_raw_data %>% 
-  filter(str_detect(string = status, pattern = fixed('host', ignore_case = TRUE))) %>% 
+df_host_data <- df_raw_data |> 
+  filter(str_detect(string = status, pattern = fixed('host', ignore_case = TRUE))) |> 
   mutate(i.check.type = "remove_survey",
          i.check.name = "",
          i.check.current_value = "",
@@ -103,19 +103,19 @@ df_host_data <- df_raw_data %>%
          i.check.comment = "", 
          i.check.reviewed = "1",
          i.check.adjust_log = "",
-         i.check.so_sm_choices = "") %>% 
-  dplyr::select(starts_with("i.check")) %>% 
+         i.check.so_sm_choices = "") |> 
+  dplyr::select(starts_with("i.check")) |> 
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_host_data")
 
 # count hh roster is not equal to mentioned number in the main dataset 
-df_count_hh_number_less_20 <- df_raw_data_hh_roster %>%
-  group_by(`_uuid`) %>%
-  mutate(int.roster_count = n()) %>% 
-  filter(row_number() == 1) %>% 
-  filter(int.roster_count != count_hh_number) %>% 
-  ungroup() %>% 
+df_count_hh_number_less_20 <- df_raw_data_hh_roster |>
+  group_by(`_uuid`) |>
+  mutate(int.roster_count = n()) |> 
+  filter(row_number() == 1) |> 
+  filter(int.roster_count != count_hh_number) |> 
+  ungroup() |> 
   mutate(i.check.type = "change_response",
          i.check.name = "count_hh_number ",
          int.roster_count_difference = int.roster_count - count_hh_number,
@@ -131,16 +131,16 @@ df_count_hh_number_less_20 <- df_raw_data_hh_roster %>%
          i.check.adjust_log = "",
          i.check.so_sm_choices = "",
          i.check.sheet = "",
-         i.check.index = "") %>%
-  dplyr::select(starts_with("i.check.")) %>%
+         i.check.index = "") |>
+  dplyr::select(starts_with("i.check.")) |>
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_count_hh_number_less_20")
 
 # checks on hhids ----------------------------------------------------------
 
-sample_hhid_nos <- df_sample_data %>% 
-  pull(unique_hhid_number) %>% 
+sample_hhid_nos <- df_sample_data |> 
+  pull(unique_hhid_number) |> 
   unique()
 
 # duplicate point numbers
@@ -160,13 +160,13 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_
 
 # Respondent is not HoH & did not include HoH details in the household composition i.e. hoh_yn == "no" & relationship_to_hoh != hh_head in the hh roster
 
-df_hoh_details_and_hh_roster_6 <- df_raw_data_hh_roster %>%
-  filter(hoh_yn == "no")  %>%
-  group_by(`_uuid`) %>%
-  mutate(int.hoh_bio = ifelse(relation_to_hoh_hhmembers %in% c("hh_head"), "given", "not")) %>% 
-  filter(!str_detect(string = paste(int.hoh_bio, collapse = ":"), pattern = "given")) %>% 
-  filter(row_number() == 1) %>% 
-  ungroup() %>% 
+df_hoh_details_and_hh_roster_6 <- df_raw_data_hh_roster |>
+  filter(hoh_yn == "no")  |>
+  group_by(`_uuid`) |>
+  mutate(int.hoh_bio = ifelse(relation_to_hoh_hhmembers %in% c("hh_head"), "given", "not")) |> 
+  filter(!str_detect(string = paste(int.hoh_bio, collapse = ":"), pattern = "given")) |> 
+  filter(row_number() == 1) |> 
+  ungroup() |> 
   mutate(i.check.type = "change_response",
          i.check.name = "relation_to_hoh_hhmembers ",
          i.check.current_value = relation_to_hoh_hhmembers,
@@ -181,8 +181,8 @@ df_hoh_details_and_hh_roster_6 <- df_raw_data_hh_roster %>%
          i.check.adjust_log = "",
          i.check.so_sm_choices = "",
          i.check.index = `_index`,
-         i.check.sheet = "hh_roster") %>%
-  dplyr::select(starts_with("i.check.")) %>%
+         i.check.sheet = "hh_roster") |>
+  dplyr::select(starts_with("i.check.")) |>
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_hoh_details_and_hh_roster_6")
