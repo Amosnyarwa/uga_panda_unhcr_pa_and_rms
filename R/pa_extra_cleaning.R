@@ -186,3 +186,8 @@ df_hoh_details_and_hh_roster_6 <- df_raw_data_hh_roster %>%
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_hoh_details_and_hh_roster_6")
+
+
+# education group extra cleaning ------------------------------------------
+
+
