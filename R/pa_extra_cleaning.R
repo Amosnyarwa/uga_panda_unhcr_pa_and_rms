@@ -208,7 +208,7 @@ df_logic_c_noschool_aged_but_attending_school_7a <- df_raw_data |>
   dplyr::select(starts_with("i.check.")) |>
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
-add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_noschool_aged_but_attending_school_7a")
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_logic_c_noschool_aged_but_attending_school_7a")
 
 # logic_c_noschool_aged_but_attending_school_7b
 df_logic_c_noschool_aged_but_attending_school_7b <- df_raw_data |>
@@ -229,7 +229,7 @@ df_logic_c_noschool_aged_but_attending_school_7b <- df_raw_data |>
   dplyr::select(starts_with("i.check.")) |>
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
-add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_noschool_aged_but_attending_school_7b")
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_logic_c_noschool_aged_but_attending_school_7b")
 
 
 # logic_c_received_assistance_but_na_satisfaction_8
@@ -276,3 +276,9 @@ df_logic_c_received_assistance_but_na_hh_changes_due_to_aid_9 <- df_raw_data |>
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_logic_c_received_assistance_but_na_hh_changes_due_to_aid_9")
 
 
+df_combined_checks <- bind_rows(logic_output)
+
+openxlsx::write.xlsx(x = df_combined_checks,
+                     file = paste0("outputs/", butteR::date_file_prefix(), 
+                                   "_extra_clean_edu_unhcr_pa.xlsx"), 
+                     overwrite = TRUE, keepNA = TRUE, na.string = "NA")
