@@ -117,7 +117,7 @@ df_count_hh_number_less_20 <- df_raw_data_hh_roster |>
   filter(int.roster_count != count_hh_number) |> 
   ungroup() |> 
   mutate(i.check.type = "change_response",
-         i.check.name = "count_hh_number ",
+         i.check.name = "count_hh_number",
          int.roster_count_difference = int.roster_count - count_hh_number,
          i.check.current_value = as.character(count_hh_number),
          i.check.value = as.character(count_hh_number + int.roster_count_difference),
@@ -168,7 +168,7 @@ df_hoh_details_and_hh_roster_6 <- df_raw_data_hh_roster |>
   filter(row_number() == 1) |> 
   ungroup() |> 
   mutate(i.check.type = "change_response",
-         i.check.name = "relation_to_hoh_hhmembers ",
+         i.check.name = "relation_to_hoh_hhmembers",
          i.check.current_value = relation_to_hoh_hhmembers,
          i.check.value = "",
          i.check.issue_id = "logic_c_hoh_details_and_hh_roster_6",
@@ -193,7 +193,7 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_ho
 df_logic_c_noschool_aged_but_attending_school_7a <- df_raw_data |>
   filter(num_children_school_aged == 0, !school_aged_children_attending_school %in% c("there_are_no_school_aged_children"))  |>
   mutate(i.check.type = "change_response",
-         i.check.name = "school_aged_children_attending_school ",
+         i.check.name = "school_aged_children_attending_school",
          i.check.current_value = school_aged_children_attending_school,
          i.check.value = "there_are_no_school_aged_children",
          i.check.issue_id = "logic_c_noschool_aged_but_attending_school_7a",
@@ -214,7 +214,7 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_lo
 df_logic_c_noschool_aged_but_attending_school_7b <- df_raw_data |>
   filter(num_children_school_aged == 0, !school_aged_children_attending_school %in% c("there_are_no_school_aged_children"))  |>
   mutate(i.check.type = "change_response",
-         i.check.name = "reason_child_not_attending_school ",
+         i.check.name = "reason_child_not_attending_school",
          i.check.current_value = reason_child_not_attending_school,
          i.check.value = "NA",
          i.check.issue_id = "logic_c_noschool_aged_but_attending_school_7b",
@@ -236,7 +236,7 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_lo
 df_logic_c_received_assistance_but_na_satisfaction_8 <- df_raw_data |>
   filter(received_humanitarian_assistance %in% c("yes"), is.na(assistance_satisfaction))  |>
   mutate(i.check.type = "change_response",
-         i.check.name = "assistance_satisfaction ",
+         i.check.name = "assistance_satisfaction",
          i.check.current_value = assistance_satisfaction,
          i.check.value = "NA",
          i.check.issue_id = "logic_c_received_assistance_but_na_satisfaction_8",
@@ -258,7 +258,7 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_lo
 df_logic_c_received_assistance_but_na_hh_changes_due_to_aid_9 <- df_raw_data |>
   filter(received_humanitarian_assistance %in% c("yes"), is.na(hh_changes_due_to_aid))  |>
   mutate(i.check.type = "change_response",
-         i.check.name = "hh_changes_due_to_aid ",
+         i.check.name = "hh_changes_due_to_aid",
          i.check.current_value = hh_changes_due_to_aid,
          i.check.value = "NA",
          i.check.issue_id = "logic_c_received_assistance_but_na_hh_changes_due_to_aid_9",
