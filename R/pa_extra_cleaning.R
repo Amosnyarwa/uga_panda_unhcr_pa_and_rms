@@ -254,3 +254,25 @@ df_logic_c_received_assistance_but_na_satisfaction_8 <- df_raw_data |>
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_logic_c_received_assistance_but_na_satisfaction_8")
 
 
+# logic_c_received_assistance_but_na_hh_changes_due_to_aid_9
+df_logic_c_received_assistance_but_na_hh_changes_due_to_aid_9 <- df_raw_data |>
+  filter(received_humanitarian_assistance %in% c("yes"), is.na(hh_changes_due_to_aid))  |>
+  mutate(i.check.type = "change_response",
+         i.check.name = "hh_changes_due_to_aid ",
+         i.check.current_value = hh_changes_due_to_aid,
+         i.check.value = "NA",
+         i.check.issue_id = "logic_c_received_assistance_but_na_hh_changes_due_to_aid_9",
+         i.check.issue = glue("received_humanitarian_assistance : {received_humanitarian_assistance}, hh_changes_due_to_aid : {hh_changes_due_to_aid}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "",
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.so_sm_choices = "") |>
+  dplyr::select(starts_with("i.check.")) |>
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_logic_c_received_assistance_but_na_hh_changes_due_to_aid_9")
+
+
