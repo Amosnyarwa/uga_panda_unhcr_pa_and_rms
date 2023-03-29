@@ -189,6 +189,7 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_ho
 
 
 # education group extra cleaning ------------------------------------------
+
 # school_aged_children_attending_school
 df_logic_c_noschool_aged_but_attending_school_7a <- df_raw_data |>
   filter(num_children_school_aged == 0, !school_aged_children_attending_school %in% c("there_are_no_school_aged_children"))  |>
@@ -212,7 +213,8 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_lo
 
 # logic_c_noschool_aged_but_attending_school_7b
 df_logic_c_noschool_aged_but_attending_school_7b <- df_raw_data |>
-  filter(num_children_school_aged == 0, !school_aged_children_attending_school %in% c("there_are_no_school_aged_children"))  |>
+  filter(num_children_school_aged == 0, !school_aged_children_attending_school %in% c("there_are_no_school_aged_children"),
+         !is.na(reason_child_not_attending_school))  |>
   mutate(i.check.type = "change_response",
          i.check.name = "reason_child_not_attending_school",
          i.check.current_value = reason_child_not_attending_school,
