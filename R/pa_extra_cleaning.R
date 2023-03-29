@@ -190,4 +190,24 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_ho
 
 # education group extra cleaning ------------------------------------------
 
+df_logic_c_noschool_aged_but_attending_school_7 <- df_raw_data |>
+  filter(num_children_school_aged == 0, !school_aged_children_attending_school %in% c("there_are_no_school_aged_children"))  |>
+  mutate(i.check.type = "change_response",
+         i.check.name = "school_aged_children_attending_school ",
+         i.check.current_value = school_aged_children_attending_school,
+         i.check.value = "there_are_no_school_aged_children",
+         i.check.issue_id = "logic_c_noschool_aged_but_attending_school_7",
+         i.check.issue = glue("num_children_school_aged : {num_children_school_aged}, school_aged_children_attending_school : {school_aged_children_attending_school}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "",
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.so_sm_choices = "") |>
+  dplyr::select(starts_with("i.check.")) |>
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_noschool_aged_but_attending_school_7")
+
 
