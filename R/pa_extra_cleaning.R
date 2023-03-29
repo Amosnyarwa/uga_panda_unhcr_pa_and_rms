@@ -189,7 +189,7 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_ho
 
 
 # education group extra cleaning ------------------------------------------
-
+# school_aged_children_attending_school
 df_logic_c_noschool_aged_but_attending_school_7a <- df_raw_data |>
   filter(num_children_school_aged == 0, !school_aged_children_attending_school %in% c("there_are_no_school_aged_children"))  |>
   mutate(i.check.type = "change_response",
@@ -210,6 +210,7 @@ df_logic_c_noschool_aged_but_attending_school_7a <- df_raw_data |>
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_noschool_aged_but_attending_school_7a")
 
+# logic_c_noschool_aged_but_attending_school_7b
 df_logic_c_noschool_aged_but_attending_school_7b <- df_raw_data |>
   filter(num_children_school_aged == 0, !school_aged_children_attending_school %in% c("there_are_no_school_aged_children"))  |>
   mutate(i.check.type = "change_response",
@@ -229,5 +230,27 @@ df_logic_c_noschool_aged_but_attending_school_7b <- df_raw_data |>
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_noschool_aged_but_attending_school_7b")
+
+
+# logic_c_received_assistance_but_na_satisfaction_8
+df_logic_c_received_assistance_but_na_satisfaction_8 <- df_raw_data |>
+  filter(received_humanitarian_assistance %in% c("yes"), is.na(assistance_satisfaction))  |>
+  mutate(i.check.type = "change_response",
+         i.check.name = "assistance_satisfaction ",
+         i.check.current_value = assistance_satisfaction,
+         i.check.value = "NA",
+         i.check.issue_id = "logic_c_received_assistance_but_na_satisfaction_8",
+         i.check.issue = glue("received_humanitarian_assistance : {received_humanitarian_assistance}, assistance_satisfaction : {assistance_satisfaction}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "",
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.so_sm_choices = "") |>
+  dplyr::select(starts_with("i.check.")) |>
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_logic_c_received_assistance_but_na_satisfaction_8")
 
 
