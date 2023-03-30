@@ -212,10 +212,10 @@ df_logic_c_noschool_aged_but_attending_school_7a <- df_raw_data |>
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_logic_c_noschool_aged_but_attending_school_7a")
 
 # logic_c_noschool_aged_but_attending_school_7b
-df_logic_c_noschool_aged_but_attending_school_7b <- df_raw_data |>
+df_logic_c_noschool_aged_but_attending_school_7b <- df_raw_data  |>  
   filter(num_children_school_aged == 0, !school_aged_children_attending_school %in% c("there_are_no_school_aged_children"),
-         !is.na(reason_child_not_attending_school))  |>
-  mutate(i.check.type = "change_response",
+         !is.na(reason_child_not_attending_school))|>
+  mutate(i.check.type = "remove_option",
          i.check.name = "reason_child_not_attending_school",
          i.check.current_value = reason_child_not_attending_school,
          i.check.value = "NA",
@@ -227,8 +227,12 @@ df_logic_c_noschool_aged_but_attending_school_7b <- df_raw_data |>
          i.check.comment = "",
          i.check.reviewed = "",
          i.check.adjust_log = "",
-         i.check.so_sm_choices = "") |>
-  dplyr::select(starts_with("i.check.")) |>
+         i.check.so_sm_choices = "")|>
+  separate(col = "reason_child_not_attending_school", into = c("x_1", "x_2", "x_3", "x_4"), sep = " " , remove = FALSE) %>%
+  pivot_longer(cols = "x_1" : "x_4", names_to = "split_var", values_to = "current_value_created")|>
+  filter(!is.na(current_value_created))|>
+  mutate(i.check.value = current_value_created)|>
+  dplyr::select(starts_with("i.check"))|>
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_logic_c_noschool_aged_but_attending_school_7b")
