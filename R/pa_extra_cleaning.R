@@ -39,7 +39,7 @@ df_raw_data <- readxl::read_excel(path = data_path, sheet = "UGA2207_PA", col_ty
                                            TRUE ~ settlement),
          district_name = i.check.district_name,
          i.check.settlement = settlement,
-         # i.check.point_number = household_id,
+         i.check.hh_id = household_id,
          start = as_datetime(start),
          end = as_datetime(end)
          )
