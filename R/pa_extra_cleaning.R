@@ -286,5 +286,5 @@ df_combined_checks <- bind_rows(logic_output)
 
 openxlsx::write.xlsx(x = df_combined_checks,
                      file = paste0("outputs/", butteR::date_file_prefix(), 
-                                   "_extra_clean_edu_unhcr_pa.xlsx"), 
+                                   "_extra_log_edu_unhcr_pa.xlsx"), 
                      overwrite = TRUE, keepNA = TRUE, na.string = "NA")
